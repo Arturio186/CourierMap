@@ -1,12 +1,15 @@
 import React from 'react';
 
 import './Register.scss';
+import RegisterForm from '../../components/RegisterForm/RegisterForm';
+import AuthCollage from '../../components/AuthCollage/AuthCollage';
 
 const Register : React.FC = () => {
     document.title = "Регистрация";
     return (
         <div className="page">
-            Register
+            <RegisterForm/>
+            <AuthCollage/>
         </div>
     )
 }
