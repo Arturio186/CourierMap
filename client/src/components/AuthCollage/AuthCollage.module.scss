@@ -1,0 +1,28 @@
+.collage {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    
+
+    div {
+        display: flex;
+        flex-direction: column;
+
+        overflow: hidden;
+
+        height: 100vh;
+
+        img {
+            border-radius: 10px;
+            margin: 10px 0px 0px 10px;
+
+            height: auto;
+            object-fit: cover;
+        }
+
+        img:first-child {
+            margin-top: 0;
+        }
+    }
+}

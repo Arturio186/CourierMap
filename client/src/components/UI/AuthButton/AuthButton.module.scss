@@ -1,0 +1,17 @@
+.authButton {
+    margin-top: 20px;
+
+    width: 250px;
+    height: 35px;
+
+    background-color: #222;
+    color: #fff;
+
+    border-radius: 5px;
+    border: 1px solid #222;
+}
+
+.authButton:hover {
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}

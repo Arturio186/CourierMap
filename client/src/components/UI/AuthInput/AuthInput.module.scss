@@ -1,0 +1,47 @@
+.authInput {
+    width: 226px;
+    height: 15px;
+    padding: 10px 12px;
+
+    border-radius: 5px;
+    border: 1px solid rgba(34, 34, 34, 0.50);
+
+    color: #222;
+
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+
+    letter-spacing: 0.24px;
+
+    background-color: #FFF;
+}
+
+
+.authInput::placeholder {
+    color: #222;
+
+    opacity: 0.5;
+
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+
+    letter-spacing: 0.24px;
+}
+
+.authInput:focus {
+    outline: none;
+}
+
+.error {
+    color: #EC6A6A;
+    font-size: 13px;
+    margin: 2px 0px;
+    text-align: center;
+}
+
+.errorField {
+    border: 1px solid #EC6A6A;
+    transition: border 0.5s ease;
+}
