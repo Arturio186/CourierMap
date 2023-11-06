@@ -1,10 +1,32 @@
-import React, {useRef} from 'react';
-import { YMaps, Map, Button } from '@pbe/react-yandex-maps';
+import React, {useEffect, useRef, useState} from 'react';
+import { YMaps, Map, Button, Placemark } from '@pbe/react-yandex-maps';
 
 import './CourierMap.scss';
 
+interface IMarkerCoords {
+    x: number;
+    y: number;
+}
+
 const CourierMap : React.FC = () => {
     const mapRef = useRef<any>(null);
+
+    const [markerCoords, setMarkerCoords] = useState<IMarkerCoords>({x: 57.1493, y: 65.5412 });
+
+    useEffect(()=>{
+        const intervalHandle = setInterval(() => {
+            setMarkerCoords({x: markerCoords.x + 0.0003, y: markerCoords.y + 0.0003})
+            mapRef.current.setCenter([markerCoords.x, markerCoords.y], 15, {
+                duration: 300
+            })
+        }, 600)
+
+        return () => clearInterval(intervalHandle);
+    }, [markerCoords])
+
+    const getMapCenter = () => {
+        console.log(1)
+    }
 
     return (
         <div className="inner-content">
@@ -14,17 +36,32 @@ const CourierMap : React.FC = () => {
                     apikey: '0b375996-25a4-4d5d-9152-504fa8810cd2',
                 }}>
                     <Map 
-                        width="400px"
-                        height="400px"
+                        width="1200px"
+                        height="700px"
+                        modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
                         defaultState={{center: [57.1493, 65.5412], zoom: 15}}
                         instanceRef={(map : any) => mapRef.current = map}
                     >
                         <Button
                             options={{ maxWidth: 128, selectOnClick: false }}
                             data={{ content: "click" }}
-                            onClick={() => console.log('click')}
+                            onClick={getMapCenter}
                         />
-                        
+                        <Placemark
+                            geometry={{
+                                type: 'Point',
+                                coordinates: [markerCoords.x, markerCoords.y]
+                            }}
+                            options={{
+                                preset: 'islands#circleIcon',
+                                iconColor: 'blue',
+                            }} 
+                            properties={{
+                                hintContent: 'Вечеринка',
+                                balloonContent: 'Курьерчик'
+                            }}
+                        />
+
                     </Map>
                 </YMaps>
             </div>
