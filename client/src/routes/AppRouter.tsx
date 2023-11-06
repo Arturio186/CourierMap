@@ -1,17 +1,13 @@
 import React from 'react';
 
+import AuthRouter from './AuthRouter';
 import GuestRouter from './GuestRouter';
 
 const AppRouter : React.FC = () => {
-    const isAuth : boolean = false;
+    const isAuth : boolean = true;
 
     return (
-        isAuth ?
-        <div>
-            Auth
-        </div>
-        :
-        <GuestRouter/>
+        isAuth ? <AuthRouter/> : <GuestRouter/>
     )
 }
 
