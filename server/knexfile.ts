@@ -14,10 +14,10 @@ const knexConfig: { [key: string]: Knex.Config } = {
 			charset: 'utf8',
 		},
 		migrations: {
-			directory: './Database/Migrations',
+			directory: './src/Database/Migrations',
 		},
 		seeds: {
-			directory: './Database/Seeds',
+			directory: './src/Database/Seeds',
 		},
 		pool: {
 			min: 0,

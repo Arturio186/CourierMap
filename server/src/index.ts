@@ -2,9 +2,12 @@ import express from 'express';
 
 import { config } from 'dotenv';
 
+import router from './Routes/index';
+
 const app = express();
 
 app.use(express.json());
+app.use(router);
 
 config();
 
