@@ -1,7 +1,8 @@
 import { Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken';
 
-import IAuthentication from "../Interfaces/IAuthenticationRequest";
+import IAuthentication from "../Interfaces/IAuthentication";
+import IUserRequestData from "../Interfaces/IUserRequestData";
 
 const AuthMiddleware = async (req: IAuthentication, res: Response, next: NextFunction) => {
     if (req.method === "OPTIONS") {
@@ -16,7 +17,7 @@ const AuthMiddleware = async (req: IAuthentication, res: Response, next: NextFun
         }
 
         const decoded = jwt.verify(token, process.env.SECRET_KEY as string);
-        req.user = decoded;
+        req.user = decoded as IUserRequestData;
 
         next();
     }   
