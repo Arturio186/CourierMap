@@ -7,6 +7,7 @@ import classes from './LoginForm.module.scss';
 
 import AuthInput from '../UI/AuthInput/AuthInput';
 import AuthButton from '../UI/AuthButton/AuthButton';
+import { authorization } from '../../http/CreditionalsAPI';
 
 interface ILoginField {
     email: string
@@ -16,8 +17,10 @@ interface ILoginField {
 const LoginForm : React.FC = () => {
     const {register, handleSubmit, formState: { errors }} = useForm<ILoginField>({mode: "onChange"})
 
-    const onSubmit: SubmitHandler<ILoginField> = (data) => {
-        console.log(data)
+    const onSubmit: SubmitHandler<ILoginField> = async (data) => {
+        const response = await authorization(data.email, data.password);
+        
+        console.log(response) 
     }
 
     return (

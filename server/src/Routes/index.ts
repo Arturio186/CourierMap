@@ -3,6 +3,6 @@ import CreditionalsRouter from './CreditionalsRouter';
 
 const router = Router();
 
-router.use(CreditionalsRouter);
+router.use('/creditionals', CreditionalsRouter);
 
 export default router;
