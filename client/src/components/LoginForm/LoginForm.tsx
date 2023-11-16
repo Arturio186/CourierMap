@@ -1,26 +1,39 @@
-import React from 'react';
-import { useForm, SubmitHandler} from 'react-hook-form';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useForm, SubmitHandler} from 'react-hook-form';
+
+import { observer } from 'mobx-react-lite';
 
 import { REGISTER_ROUTE } from '../../utils/consts';
-import classes from './LoginForm.module.scss';
 
 import AuthInput from '../UI/AuthInput/AuthInput';
 import AuthButton from '../UI/AuthButton/AuthButton';
+
 import { authorization } from '../../http/CreditionalsAPI';
+import { Context } from '../..';
+
+import classes from './LoginForm.module.scss';
 
 interface ILoginField {
     email: string
     password: string
 }
 
-const LoginForm : React.FC = () => {
+const LoginForm : React.FC = observer(() => {
     const {register, handleSubmit, formState: { errors }} = useForm<ILoginField>({mode: "onChange"})
+
+    const {user} = useContext(Context);
 
     const onSubmit: SubmitHandler<ILoginField> = async (data) => {
         const response = await authorization(data.email, data.password);
         
-        console.log(response) 
+        if (response.status == 200) {
+            user.setUser(response.message);
+            user.setIsAuth(true);
+        }
+        else {
+            alert(response.message);
+        }
     }
 
     return (
@@ -67,6 +80,6 @@ const LoginForm : React.FC = () => {
             <NavLink to={REGISTER_ROUTE}>Зарегистрироваться</NavLink>
         </form>
     )
-}
+})
 
 export default LoginForm;

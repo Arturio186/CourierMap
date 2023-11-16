@@ -1,14 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, useContext} from 'react';
+import { observer } from 'mobx-react-lite';
 import { YMaps, Map, Button, Placemark } from '@pbe/react-yandex-maps';
 
 import './CourierMap.scss';
+import { Context } from '../..';
 
 interface IMarkerCoords {
     x: number;
     y: number;
 }
 
-const CourierMap : React.FC = () => {
+const CourierMap : React.FC = observer(() => {
     const mapRef = useRef<any>(null);
 
     const [markerCoords, setMarkerCoords] = useState<IMarkerCoords>({x: 57.1493, y: 65.5412 });
@@ -27,9 +29,20 @@ const CourierMap : React.FC = () => {
     const getMapCenter = () => {
         console.log(1)
     }
+    // Позже убрать, вынести в шаблон/навбар
+    const {user} = useContext(Context);
+
+    const logout = () => {
+        user.setIsAuth(false);
+        user.setUser({});
+        localStorage.removeItem('token');
+    }
 
     return (
         <div className="inner-content">
+            <button onClick={logout}>
+                Выйти из аккаунта
+            </button>
             <h1>Отслеживание курьеров</h1>
             <div className="map">
                 <YMaps query={{
@@ -67,6 +80,6 @@ const CourierMap : React.FC = () => {
             </div>
         </div>
     )
-}
+})
 
 export default CourierMap;

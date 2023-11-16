@@ -1,14 +1,28 @@
 import { authHost, host } from "./index";
 import { jwtDecode } from "jwt-decode";
 
+const ProccesResponse = (data : any) => {
+    let message = data.message
+
+    if (data.message.token) {
+        localStorage.setItem('token', data.message.token)
+        message = jwtDecode(data.message.token)
+    }
+
+    const result = {
+        status: data.status,
+        message: message
+    }
+
+    return result
+}
+
 export const registration = async (email : string, password : string) => {
     const {data} = await host.post('creditionals/registartion', {
         email, password
     });
 
-    localStorage.setItem('token', data.token);
-
-    return jwtDecode(data.token);
+    return ProccesResponse(data);
 }
 
 export const authorization = async (email : string, password : string) => {
@@ -16,18 +30,11 @@ export const authorization = async (email : string, password : string) => {
         email, password
     });
 
-    const result = {
-        status: data.status,
-        message: data.message.token ? jwtDecode(data.message.token) : data.message
-    }
-
-    return result;
+    return ProccesResponse(data);
 }
 
 export const authentication = async () => {
     const {data} = await authHost.get('creditionals/authentication');
 
-    localStorage.setItem('token', data.token);
-
-    return jwtDecode(data.token);
+    return ProccesResponse(data);
 }
