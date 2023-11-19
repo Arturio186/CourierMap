@@ -20,6 +20,8 @@ interface IOrder {
     products: string;
     address: string;
     courier_id: number | null;
+    x: number;
+    y: number;
 }
 
 const CourierMap : React.FC = observer(() => {
@@ -30,12 +32,12 @@ const CourierMap : React.FC = observer(() => {
     ]);
 
     const [orders, setOrders] = useState<Array<IOrder>>([
-        {num: 1, products: 'Шаурма', address: 'г.Тюмень, ул. Ленина, д.25', courier_id: 1},
-        {num: 2, products: 'Яблоко х4', address: 'г.Тюмень, ул. Киевская, д.1', courier_id: 1},
-        {num: 3, products: 'Банан х6', address: 'г.Тюмень, ул. Харьковская, д.20', courier_id: 2},
-        {num: 4, products: 'Кока-кола', address: 'г.Тюмень, ул. Вьюжная, д.21', courier_id: null},
-        {num: 5, products: 'Спрайт', address: 'г.Тюмень, ул. Володарского, д.22', courier_id: 3},
-        {num: 6, products: 'Пепси', address: 'г.Тюмень, ул. Республики, д.24', courier_id: 3}
+        {num: 1, products: 'Шаурма', address: 'г.Тюмень, ул. Ленина, д.25', courier_id: 1, x: 57.1453, y: 65.5552},
+        {num: 2, products: 'Яблоко х4', address: 'г.Тюмень, ул. Киевская, д.1', courier_id: 1, x: 57.1443, y: 65.5342},
+        {num: 3, products: 'Банан х6', address: 'г.Тюмень, ул. Харьковская, д.20', courier_id: 2, x: 57.1463, y: 65.5562},
+        {num: 4, products: 'Кока-кола', address: 'г.Тюмень, ул. Вьюжная, д.21', courier_id: null, x: 57.1473, y: 65.5532},
+        {num: 5, products: 'Спрайт', address: 'г.Тюмень, ул. Володарского, д.22', courier_id: 3, x: 57.1453, y: 65.5352},
+        {num: 6, products: 'Пепси', address: 'г.Тюмень, ул. Республики, д.24', courier_id: 3, x: 57.1453, y: 65.5572}
     ])
 
     const [targetCourier, setTargetCourier] = useState<ICourier>(couriers[0]);
@@ -69,22 +71,21 @@ const CourierMap : React.FC = observer(() => {
         return () => clearInterval(intervalHandle);
     }, [couriers])
 
-    const setFocusOnCourier = (id : string) => {
-        const focusCoord = {x: 0, y: 0};
-        couriers.forEach((courier) => {
-            if (courier.id === Number(id)) {
-                setTargetCourier(courier);
-
-                focusCoord.x = courier.x;
-                focusCoord.y = courier.y;
-            }
-        })
-
+    const setFocusOnCoord = (x : number, y : number) => {
         if (mapRef.current.setCenter) {
-            mapRef.current.setCenter([focusCoord.x, focusCoord.y], mapRef.current.getZoom(), {
+            mapRef.current.setCenter([x, y], mapRef.current.getZoom(), {
                 duration: 300
             })
         }
+    }
+
+    const setFocusOnCourier = (id : string) => {
+        couriers.forEach((courier) => {
+            if (courier.id === Number(id)) {
+                setTargetCourier(courier);
+                setFocusOnCoord(courier.x, courier.y);
+            }
+        })
     }
 
     const openCourierModal = (event: React.MouseEvent<HTMLElement>) => {
@@ -99,6 +100,7 @@ const CourierMap : React.FC = observer(() => {
         orders.forEach((order) => {
             if (order.num === id) {
                 setTargetOrder(order);
+                setFocusOnCoord(order.x, order.y);
             }
         })
 
@@ -151,7 +153,11 @@ const CourierMap : React.FC = observer(() => {
                     <h3>Заказы</h3>
                     <div className="orders">
                         {orders.map((order) => {
-                            return <div className="order" key={order.num} onClick={(e) => openOrderModal(e, order.num)}>
+                            return <div 
+                                    className="order" 
+                                    key={order.num} 
+                                    onClick={(e) => openOrderModal(e, order.num)}
+                                >
                                 <div className="card">
                                     <p>Заказ №{order.num}</p>
                                     <div className="columns">
@@ -203,6 +209,26 @@ const CourierMap : React.FC = observer(() => {
                                             balloonContent: `${courier.name} ${courier.surname}`
                                         }}
                                         courier_id={courier.id}
+                                    />
+                                })
+                            }
+                            {
+                                orders.map((order) => {
+                                    return <Placemark
+                                        key={order.num}
+                                        geometry={{
+                                            type: 'Point',
+                                            coordinates: [order.x, order.y]
+                                        }}
+                                        options={{
+                                            preset: 'islands#dotIcon',
+                                            iconColor: order.num === targetOrder.num ? 'red' : 'green',
+                                        }} 
+                                        properties={{
+                                            hintContent: 'Заказик',
+                                            balloonContent: `Номер ${order.num}<br>${order.address}`
+                                        }}
+                                        
                                     />
                                 })
                             }
