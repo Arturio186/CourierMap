@@ -15,6 +15,13 @@ interface ICourier {
     y: number;
 }
 
+interface IOrder {
+    num: number;
+    products: string;
+    address: string;
+    courier_id: number | null;
+}
+
 const CourierMap : React.FC = observer(() => {
     const [couriers, setCouriers] = useState<Array<ICourier>>([
         {id: 1, name: 'Артур', surname: 'Артурикович', x: 57.1493, y: 65.5412},
@@ -22,23 +29,35 @@ const CourierMap : React.FC = observer(() => {
         {id: 3, name: 'Матвей', surname: 'Мотикович', x: 57.1497, y: 65.5408}
     ]);
 
+    const [orders, setOrders] = useState<Array<IOrder>>([
+        {num: 1, products: 'Шаурма', address: 'г.Тюмень, ул. Ленина, д.25', courier_id: 1},
+        {num: 2, products: 'Яблоко х4', address: 'г.Тюмень, ул. Киевская, д.1', courier_id: 1},
+        {num: 3, products: 'Банан х6', address: 'г.Тюмень, ул. Харьковская, д.20', courier_id: 2},
+        {num: 4, products: 'Кока-кола', address: 'г.Тюмень, ул. Вьюжная, д.21', courier_id: null},
+        {num: 5, products: 'Спрайт', address: 'г.Тюмень, ул. Володарского, д.22', courier_id: 3},
+        {num: 6, products: 'Пепси', address: 'г.Тюмень, ул. Республики, д.24', courier_id: 3}
+    ])
+
     const [targetCourier, setTargetCourier] = useState<ICourier>(couriers[0]);
+    const [targetOrder, setTargetOrder] = useState<IOrder>({} as IOrder);
+
     const [modalCourier, setModalCourier] = useState<boolean>(false);
+    const [modalOrder, setModalOrder] = useState<boolean>(false);
 
     const mapRef = useRef<any>(null);
 
     useEffect(()=>{
         const intervalHandle = setInterval(() => {
             setCouriers([...couriers.map((courier) => {
-                if (courier.id == 1) {
+                if (courier.id === 1) {
                     courier.x += 0.0001
                     courier.y += 0.0001
                 }
-                if (courier.id == 2) {
+                if (courier.id === 2) {
                     courier.x += 0.0002
                     courier.y += 0.0002
                 }
-                if (courier.id == 3) {
+                if (courier.id === 3) {
                     courier.x += 0.0003
                     courier.y += 0.0003
                 }
@@ -74,6 +93,18 @@ const CourierMap : React.FC = observer(() => {
         setModalCourier(true)
     } 
 
+    const openOrderModal = (event: React.MouseEvent<HTMLElement>, id : number) => {
+        event.preventDefault();
+
+        orders.forEach((order) => {
+            if (order.num === id) {
+                setTargetOrder(order);
+            }
+        })
+
+        setModalOrder(true);
+    } 
+
     // Позже убрать, вынести в шаблон/навбар
     const {user} = useContext(Context);
 
@@ -86,7 +117,18 @@ const CourierMap : React.FC = observer(() => {
     return (
         <div className="inner-content">
             <Modal visible={modalCourier} setVisible={setModalCourier}>
-                Выбран {`${targetCourier.name} ${targetCourier.surname}`}
+                <p><b>Курьер:</b> {`${targetCourier.name} ${targetCourier.surname}`}</p>
+                <h3>Активные заказы</h3>
+                {orders.map((order) => {
+                    if (order.courier_id === targetCourier.id) {
+                        return <p>Номер: {order.num}, Товары: {order.products}, Адрес: {order.address}</p>
+                    }
+                })}
+            </Modal>
+            <Modal visible={modalOrder} setVisible={setModalOrder}>
+                <p> Номер заказа: {targetOrder.num}</p>
+                <p> Cодержимое: {targetOrder.products}</p>
+                <p> Адрес: {targetOrder.address}</p>
             </Modal>
             <button onClick={logout}>
                 Выйти из аккаунта
@@ -94,17 +136,39 @@ const CourierMap : React.FC = observer(() => {
             <div className="window">
                 <div className="menu">
                     <h3>Курьеры</h3>
-                    <form>
+                    <form className="couriers-menu">
                         <select name="courier" id="courier" onChange={(e) => setFocusOnCourier(e.target.value)}>
+                            <option style={{display: 'none'}} selected={true} disabled={true}>Выбрать курьера</option>
                             {couriers.map((courier) => { 
-                                return <option value={courier.id}>{`${courier.name} ${courier.surname}`}</option>
+                                return <option key={courier.id} value={courier.id}>
+                                    {`${courier.name} ${courier.surname}`}
+                                </option>
                                 })}
                         </select>
                         <button onClick={openCourierModal}>Подробнее</button>
                     </form>
                     
                     <h3>Заказы</h3>
-                    
+                    <div className="orders">
+                        {orders.map((order) => {
+                            return <div className="order" key={order.num} onClick={(e) => openOrderModal(e, order.num)}>
+                                <div className="card">
+                                    <p>Заказ №{order.num}</p>
+                                    <div className="columns">
+                                        <div className="left-column">
+                                            <h3>Содержимое заказа</h3>
+                                            <p>{order.products}</p>
+                                        </div>
+                                        <div className="right-column">
+                                            <h3>Адрес доставки</h3>
+                                            Адрес: {order.address}
+                                        </div> 
+                                    </div>
+                                    <p>Статус: {order.courier_id == null ? 'Свободный' : 'Доставляется'}</p>
+                                </div>
+                            </div>
+                        })}
+                    </div>
                 </div>
                 <div className="map">
                     <YMaps query={{
