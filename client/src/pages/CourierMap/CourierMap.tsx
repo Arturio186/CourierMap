@@ -106,7 +106,18 @@ const CourierMap : React.FC = observer(() => {
 
         setModalOrder(true);
     } 
-
+    /* ДОПИЛИТЬ, УЗНАТЬ КАК ОТЛОВИТЬ ПЛЕЙСМАРК, НА КОТОРЫЙ НАЖАЛИ
+    const proccesMapClick = (event: any) => {
+        console.log(event)
+        orders.forEach((order) => {
+            if (order.num === Number(event.target.order_id)) {
+                setTargetOrder(order);
+                setFocusOnCoord(order.x, order.y);
+                openOrderModal(event, order.num)
+            }
+        })
+    }
+    */
     // Позже убрать, вынести в шаблон/навбар
     const {user} = useContext(Context);
 
@@ -226,9 +237,7 @@ const CourierMap : React.FC = observer(() => {
                                         }} 
                                         properties={{
                                             hintContent: 'Заказик',
-                                            balloonContent: `Номер ${order.num}<br>${order.address}`
                                         }}
-                                        
                                     />
                                 })
                             }
