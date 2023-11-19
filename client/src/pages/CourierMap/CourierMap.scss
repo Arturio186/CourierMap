@@ -45,10 +45,15 @@ h1 {
             margin: 0;
         }
 
+
         .card {
             width: 100%;
             display: flex;
             flex-direction: column;
+
+            .status {
+                margin-top: auto;
+            }
 
             .columns {
                 width: 100%;
@@ -65,12 +70,22 @@ h1 {
 
                 .left-column {
                     width: 50%;
+                    max-height: 4em;
+
+                    white-space: nowrap;
+
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
             }
-        }
+            h3 {
+                font-size: 16px;
+            }
 
+            p {
+                font-size: 12px;
+            }
+        }
         transition: background-color 0.3s ease;
     }
 

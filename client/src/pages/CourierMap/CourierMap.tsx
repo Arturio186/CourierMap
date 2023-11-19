@@ -17,7 +17,7 @@ interface ICourier {
 
 interface IOrder {
     num: number;
-    products: string;
+    products: Array<string>;
     address: string;
     courier_id: number | null;
     x: number;
@@ -32,12 +32,12 @@ const CourierMap : React.FC = observer(() => {
     ]);
 
     const [orders, setOrders] = useState<Array<IOrder>>([
-        {num: 1, products: 'Шаурма', address: 'г.Тюмень, ул. Ленина, д.25', courier_id: 1, x: 57.1453, y: 65.5552},
-        {num: 2, products: 'Яблоко х4', address: 'г.Тюмень, ул. Киевская, д.1', courier_id: 1, x: 57.1443, y: 65.5342},
-        {num: 3, products: 'Банан х6', address: 'г.Тюмень, ул. Харьковская, д.20', courier_id: 2, x: 57.1463, y: 65.5562},
-        {num: 4, products: 'Кока-кола', address: 'г.Тюмень, ул. Вьюжная, д.21', courier_id: null, x: 57.1473, y: 65.5532},
-        {num: 5, products: 'Спрайт', address: 'г.Тюмень, ул. Володарского, д.22', courier_id: 3, x: 57.1453, y: 65.5352},
-        {num: 6, products: 'Пепси', address: 'г.Тюмень, ул. Республики, д.24', courier_id: 3, x: 57.1453, y: 65.5572}
+        {num: 1, products: ['Яблоко', 'Банан', 'Грушка'], address: 'г.Тюмень, ул. Ленина, д.25', courier_id: 1, x: 57.1453, y: 65.5552},
+        {num: 2, products: ['Яблоко', 'Грушка', 'Грушка'], address: 'г.Тюмень, ул. Киевская, д.1', courier_id: 1, x: 57.1443, y: 65.5342},
+        {num: 3, products: ['Грушка', 'Банан', 'Грушка'], address: 'г.Тюмень, ул. Харьковская, д.20', courier_id: 2, x: 57.1463, y: 65.5562},
+        {num: 4, products: ['Яблоко', 'Банан', 'Яблоко'], address: 'г.Тюмень, ул. Вьюжная, д.21', courier_id: null, x: 57.1473, y: 65.5532},
+        {num: 5, products: ['Банан', 'Банан', 'Банан'], address: 'г.Тюмень, ул. Володарского, д.22', courier_id: 3, x: 57.1453, y: 65.5352},
+        {num: 6, products: ['Яблоко', 'Яблоко', 'Яблоко'], address: 'г.Тюмень, ул. Республики, д.24', courier_id: 3, x: 57.1453, y: 65.5572}
     ])
 
     const [targetCourier, setTargetCourier] = useState<ICourier>(couriers[0]);
@@ -106,18 +106,17 @@ const CourierMap : React.FC = observer(() => {
 
         setModalOrder(true);
     } 
-    /* ДОПИЛИТЬ, УЗНАТЬ КАК ОТЛОВИТЬ ПЛЕЙСМАРК, НА КОТОРЫЙ НАЖАЛИ
-    const proccesMapClick = (event: any) => {
-        console.log(event)
+    /* ДОПИЛИТЬ, УЗНАТЬ КАК ОТЛОВИТЬ ПЛЕЙСМАРК, НА КОТОРЫЙ НАЖАЛИ  */
+    const proccesMapClick = (event: React.MouseEvent<HTMLElement>, id : number) => {
         orders.forEach((order) => {
-            if (order.num === Number(event.target.order_id)) {
+            if (order.num === id) {
                 setTargetOrder(order);
                 setFocusOnCoord(order.x, order.y);
                 openOrderModal(event, order.num)
             }
         })
     }
-    */
+    
     // Позже убрать, вынести в шаблон/навбар
     const {user} = useContext(Context);
 
@@ -140,7 +139,9 @@ const CourierMap : React.FC = observer(() => {
             </Modal>
             <Modal visible={modalOrder} setVisible={setModalOrder}>
                 <p> Номер заказа: {targetOrder.num}</p>
-                <p> Cодержимое: {targetOrder.products}</p>
+                <p> Cодержимое: {targetOrder.products?.map((product) => {
+                    return <p>{product}</p>
+                })}</p>
                 <p> Адрес: {targetOrder.address}</p>
             </Modal>
             <button onClick={logout}>
@@ -174,14 +175,16 @@ const CourierMap : React.FC = observer(() => {
                                     <div className="columns">
                                         <div className="left-column">
                                             <h3>Содержимое заказа</h3>
-                                            <p>{order.products}</p>
+                                            {order.products.map((product) => {
+                                                return <p>{product}</p>
+                                            })}
                                         </div>
                                         <div className="right-column">
                                             <h3>Адрес доставки</h3>
-                                            Адрес: {order.address}
+                                            <p>Адрес: {order.address}</p>
                                         </div> 
                                     </div>
-                                    <p>Статус: {order.courier_id == null ? 'Свободный' : 'Доставляется'}</p>
+                                    <p className="status">Статус: {order.courier_id == null ? 'Свободный' : 'Доставляется'}</p>
                                 </div>
                             </div>
                         })}
@@ -219,7 +222,6 @@ const CourierMap : React.FC = observer(() => {
                                             hintContent: 'Курьерчик',
                                             balloonContent: `${courier.name} ${courier.surname}`
                                         }}
-                                        courier_id={courier.id}
                                     />
                                 })
                             }
@@ -238,6 +240,9 @@ const CourierMap : React.FC = observer(() => {
                                         properties={{
                                             hintContent: 'Заказик',
                                         }}
+                                        onClick={
+                                            (event : React.MouseEvent<HTMLElement>) => proccesMapClick(event, order.num)
+                                        }
                                     />
                                 })
                             }
