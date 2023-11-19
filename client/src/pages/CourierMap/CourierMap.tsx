@@ -18,17 +18,14 @@ const CourierMap : React.FC = observer(() => {
     useEffect(()=>{
         const intervalHandle = setInterval(() => {
             setMarkerCoords({x: markerCoords.x + 0.0003, y: markerCoords.y + 0.0003})
-            mapRef.current.setCenter([markerCoords.x, markerCoords.y], 15, {
+            mapRef.current.setCenter([markerCoords.x, markerCoords.y], mapRef.current.getZoom(), {
                 duration: 300
             })
-        }, 600)
+        }, 2000)
 
         return () => clearInterval(intervalHandle);
     }, [markerCoords])
 
-    const getMapCenter = () => {
-        console.log(1)
-    }
     // Позже убрать, вынести в шаблон/навбар
     const {user} = useContext(Context);
 
@@ -44,21 +41,24 @@ const CourierMap : React.FC = observer(() => {
                 Выйти из аккаунта
             </button>
             <h1>Отслеживание курьеров</h1>
+            <div className="">
+
+            </div>
             <div className="map">
                 <YMaps query={{
                     apikey: '0b375996-25a4-4d5d-9152-504fa8810cd2',
                 }}>
                     <Map 
-                        width="1200px"
-                        height="700px"
+                        width="64%"
+                        height="80vh"
                         modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
                         defaultState={{center: [57.1493, 65.5412], zoom: 15}}
                         instanceRef={(map : any) => mapRef.current = map}
+                        options={{suppressMapOpenBlock: true}}
                     >
                         <Button
                             options={{ maxWidth: 128, selectOnClick: false }}
                             data={{ content: "click" }}
-                            onClick={getMapCenter}
                         />
                         <Placemark
                             geometry={{
@@ -74,7 +74,6 @@ const CourierMap : React.FC = observer(() => {
                                 balloonContent: 'Курьерчик'
                             }}
                         />
-
                     </Map>
                 </YMaps>
             </div>
