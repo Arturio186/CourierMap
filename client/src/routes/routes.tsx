@@ -9,6 +9,7 @@ import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import CourierMap from '../pages/CourierMap/CourierMap';
 import MainLayout from "../layouts/MainLayout";
+import Products from "../pages/Products/Products";
 
 export const publicRoutes : Array<IRoute> = [
     {path: LOGIN_ROUTE, element: <Login/>, title: "Авторизация"},
@@ -21,7 +22,7 @@ export const privateRoutes : Array<IRoute> = [
     {
         path: '/', element: <MainLayout />, title: 'Шаблон', children: [
             {path: MAP_ROUTE, element: <CourierMap/>, title: "Карта курьеров"},
-            {path: '/test', element: <CourierMap/>, title: "Тест"},
+            {path: '/products', element: <Products/>, title: "Товары"},
         ]
     },
     

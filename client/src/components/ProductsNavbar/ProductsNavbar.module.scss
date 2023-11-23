@@ -1,0 +1,25 @@
+.navbar {
+    width: 100%; 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .active, .item {
+        padding-bottom: 2px;
+        margin-right: 10px;
+    }
+
+    .active {
+        border-bottom: 2px solid black;
+    }
+
+    .item {
+        background: linear-gradient(currentColor 0 0) bottom /var(--d, 0) 2px no-repeat;
+        transition:0.5s;
+    }
+    
+    .item:hover {
+        cursor: pointer;
+        --d: 100%;
+    }
+}
