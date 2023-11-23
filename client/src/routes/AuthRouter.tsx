@@ -1,19 +1,9 @@
-import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import { MAP_ROUTE } from '../utils/consts';
+import { privateRoutes } from './routes';
+import Navbar from '../components/UI/Navbar/Navbar';
 
-import CourierMap from '../pages/CourierMap/CourierMap';
-
-const authBrowserRouter = createBrowserRouter([
-    {
-		path: MAP_ROUTE,
-		element: <CourierMap/>,
-	},
-    {
-		path: '*',
-		element: <Navigate to={MAP_ROUTE} />,
-	},
-]);
+const authBrowserRouter = createBrowserRouter(privateRoutes);
 
 const AuthRouter = () => <RouterProvider router={authBrowserRouter}/>;
 

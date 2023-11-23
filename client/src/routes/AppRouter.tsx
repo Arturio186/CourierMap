@@ -6,6 +6,7 @@ import GuestRouter from './GuestRouter';
 
 import { Context } from '..';
 import { authentication } from '../http/CreditionalsAPI';
+import Navbar from '../components/UI/Navbar/Navbar';
 
 const AppRouter : React.FC = observer(() => {
     
@@ -30,7 +31,10 @@ const AppRouter : React.FC = observer(() => {
       }, []);
 
     return (
-        loading ? <div>Загрузка...</div> : user.isAuth ? <AuthRouter/> : <GuestRouter/>
+        loading ? <div>Загрузка...</div> : user.isAuth ? 
+        <AuthRouter/>
+        : 
+        <GuestRouter/>
     )
 })
 

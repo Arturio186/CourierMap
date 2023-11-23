@@ -19,12 +19,12 @@
     margin-bottom: 32px;
 }
 
-a {
+.link {
     text-decoration: none;
     color: #222;
 }
 
-a:hover {
+.link:hover {
     opacity: 0.7;
     transition: opacity 0.3s ease;
 }

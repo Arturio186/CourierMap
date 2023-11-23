@@ -77,7 +77,7 @@ const LoginForm : React.FC = observer(() => {
             </div>
             <AuthButton>Войти</AuthButton>
             <a href="#">Забыли пароль?</a>
-            <NavLink to={REGISTER_ROUTE}>Зарегистрироваться</NavLink>
+            <NavLink to={REGISTER_ROUTE} className={classes.link}>Зарегистрироваться</NavLink>
         </form>
     )
 })

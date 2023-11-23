@@ -106,7 +106,7 @@ const CourierMap : React.FC = observer(() => {
 
         setModalOrder(true);
     } 
-    /* ДОПИЛИТЬ, УЗНАТЬ КАК ОТЛОВИТЬ ПЛЕЙСМАРК, НА КОТОРЫЙ НАЖАЛИ  */
+    
     const proccesMapClick = (event: React.MouseEvent<HTMLElement>, id : number) => {
         orders.forEach((order) => {
             if (order.num === id) {
@@ -115,15 +115,6 @@ const CourierMap : React.FC = observer(() => {
                 openOrderModal(event, order.num)
             }
         })
-    }
-    
-    // Позже убрать, вынести в шаблон/навбар
-    const {user} = useContext(Context);
-
-    const logout = () => {
-        user.setIsAuth(false);
-        user.setUser({});
-        localStorage.removeItem('token');
     }
 
     return (
@@ -144,9 +135,6 @@ const CourierMap : React.FC = observer(() => {
                 })}</p>
                 <p> Адрес: {targetOrder.address}</p>
             </Modal>
-            <button onClick={logout}>
-                Выйти из аккаунта
-            </button>
             <div className="window">
                 <div className="menu">
                     <h3>Курьеры</h3>

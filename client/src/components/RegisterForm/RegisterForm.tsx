@@ -80,7 +80,7 @@ const RegisterForm : React.FC = observer(() => {
                 />
             </div>
             <AuthButton>Заргеистрироваться</AuthButton>
-            <NavLink to={LOGIN_ROUTE}>Авторизироваться</NavLink>
+            <NavLink to={LOGIN_ROUTE} className={classes.link}>Авторизироваться</NavLink>
         </form>
     )
 })
