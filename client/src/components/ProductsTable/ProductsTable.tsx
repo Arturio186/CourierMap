@@ -27,21 +27,25 @@ const ProductsTable : React.FC<IProductsTableProps> = ({categories}) => {
                 setCurrentCategoryID={setCurrentCategoryID}
             />
             <table>
-                <th>
-                    <td>Название</td>
-                    <td>Цена</td>
-                    <td>Действие</td>
-                </th>
-                {currentProductList.map((product) => {
-                    return <tr>
-                        <td>{product.name}</td>
-                        <td>{product.price}</td>
-                        <td className={classes.actions}>
-                            <button>Изменить</button>
-                            <button>Удалить</button>
-                        </td>
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Цена</th>
+                        <th>Действие</th>
                     </tr>
-                })}
+                </thead>
+                <tbody>
+                    {currentProductList.map((product) => {
+                        return <tr>
+                            <td>{product.name}</td>
+                            <td>{product.price}</td>
+                            <td className={classes.actions}>
+                                <button>Изменить</button>
+                                <button>Удалить</button>
+                            </td>
+                        </tr>
+                    })}
+                </tbody>
             </table>
         </>
     )
