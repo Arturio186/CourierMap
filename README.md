@@ -8,18 +8,18 @@ CourierMap - это система управления заказами для 
 
 ## Технологии
 ### Frontend
-React
-React Router Dom v6
-TypeScript
-React Hook Forms
-Axios
-MobX
+-React
+-React Router Dom v6
+-TypeScript
+-React Hook Forms
+-Axios
+-MobX
 ### Backend
-Node.js 
-Express.js
-Knex.js
-PostgreSQL
-Socket.IO
+-Node.js 
+-Express.js
+-Knex.js
+-PostgreSQL
+-Socket.IO
 
 ## Установка
 -
