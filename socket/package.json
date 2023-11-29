@@ -2,7 +2,8 @@
   "name": "soketserver",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
     "start": "npm run build && node build/index",
     "build": "rimraf ./build && npx tsc"
