@@ -1,11 +1,11 @@
 import { Knex } from "knex";
 
 
-exports.up = function(knex: any) {
+export async function up(knex: Knex) : Promise<void> {
     return knex.schema
     .createTable('orders', function(table:any) {
         table.increments('id').primary();
-        table.integer('user_id').references('users.id');
+        table.integer('courier_id').references('users.id');
         
         table.string('status',30);
         table.string('adress',200);
@@ -17,9 +17,6 @@ exports.up = function(knex: any) {
       });
 };
 
-
-
-exports.down = function(knex: any) {
-    return knex.schema
-    .dropTable('orders',true);
+export async function down(knex: Knex) : Promise<void> {
+    return knex.schema.dropTable('orders');
 };
