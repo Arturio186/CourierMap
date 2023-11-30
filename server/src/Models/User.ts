@@ -1,6 +1,11 @@
 import db from '../Database/knex';
 import IUserData from '../Interfaces/IUserData';
 
+enum Roles {
+    Opeartor = 0,
+    Courier 
+}
+
 class User {
     static async GetUserByEmail(email : string) {
         const user = await db('users').where({email}).first();
@@ -15,7 +20,7 @@ class User {
                 name: 'ДОБАВЬ ПОЛЯ',
                 email: email,
                 password: password,
-                role: 0
+                role: Roles.Opeartor
             });
 
         return user;
