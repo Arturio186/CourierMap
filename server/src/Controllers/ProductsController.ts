@@ -18,7 +18,12 @@ class ProductsController {
 
     static async GetProducts(req: Request, res: Response, next: NextFunction) {
         try {
-            const {category_id} = req.body;
+            const { category_id } = req.params;
+            console.log(req.params);
+
+            const products = await Product.GetProductsByCategoryID(Number(category_id));
+
+            res.json({status: 200, message: {products: products}});
         }
         catch (error) {
             console.log(error)

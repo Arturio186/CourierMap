@@ -13,6 +13,10 @@ class Product {
         
         return product;
     }
+
+    static async GetProductsByCategoryID(category_id : number) : Promise<IProductData[]> {
+        return await db('products').select('*').where({category_id: category_id});
+    }
 }
 
 export default Product;
