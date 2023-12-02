@@ -25,3 +25,11 @@ export const AddProduct = async (name: string, price: number, category_id: numbe
 
     return data;
 }
+
+export const EditProductByID = async (id: number, name: string, price: number) => {
+    const {data} = await authHost.post(`products/edit/${id}`, {
+        name, price
+    })
+
+    return data;
+}

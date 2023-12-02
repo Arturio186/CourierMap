@@ -3,19 +3,23 @@ import ReactDOM from 'react-dom';
 
 import classes from './ProductsTable.module.scss';
 
-import ProductsNavbar from '../ProductsNavbar/ProductsNavbar';
+import IProduct from 'interfaces/IProduct';
+import ICategory from 'interfaces/ICategory';
+import { GetCategories, GetProductsByCategoryID, DeleteProductByID } from 'http/ProductsAPI';
 
-import IProduct from '../../interfaces/IProduct';
-import ICategory from '../../interfaces/ICategory';
-import { GetCategories, GetProductsByCategoryID, DeleteProductByID } from '../../http/ProductsAPI';
+import ProductsNavbar from 'components/ProductsNavbar/ProductsNavbar';
+import AddProductForm from 'components/AddProductForm/AddProductForm';
+import EditProductForm from 'components/EditProductForm/EditProductForm';
 
 import Notification from '../UI/Notification/Notification';
 import Button from '../UI/Button/Button';
 import Modal from '../UI/Modal/Modal';
-import AddProductForm from '../AddProductForm/AddProductForm';
+
 
 const ProductsTable : React.FC = () => {
     const [currentCategoryID, setCurrentCategoryID] = useState<number>(-1);
+    const [targetProduct, setTargetProduct] = useState<IProduct | null>(null);
+
     const [categoriesLoading, setCategoriesLoading] = useState(true);
     const [categories, setCategories] = useState<Array<ICategory>>([]);
 
@@ -23,6 +27,9 @@ const ProductsTable : React.FC = () => {
     const [productsLoading, setProductsLoading] = useState(false);
 
     const [notification, setNotification] = useState<JSX.Element | null>(null);
+
+    const [modalAddProduct, setModalAddProduct] = useState(false);
+    const [modalEditProduct, setModalEditProduct] = useState(false);
 
     useEffect(()=> {
         (async () => {
@@ -72,15 +79,13 @@ const ProductsTable : React.FC = () => {
     }
 
     const ChangeProduct = async (id : number) => {
+        products.forEach((product) => {
+            if (product.id === id) {
+                setTargetProduct(product);
+            }
+        })
 
-    }
-
-    const [modalAddProduct, setModalAddProduct] = useState(false);
-
-    const OpenAddProductModal = (event : React.MouseEvent<HTMLElement>) => {
-        event.preventDefault();
-
-        setModalAddProduct(true);
+        setModalEditProduct(true);
     }
 
     return (
@@ -97,6 +102,16 @@ const ProductsTable : React.FC = () => {
                     setVisible={setModalAddProduct}
                 />
             </Modal>
+            <Modal visible={modalEditProduct} setVisible={setModalEditProduct}>
+                <EditProductForm 
+                    targetProduct={targetProduct as IProduct}
+                    products={products}
+                    setProducts={setProducts}
+                    showNotification={showNotification}
+                    setVisible={setModalAddProduct}
+                />
+            </Modal>
+
             <ProductsNavbar 
                 categories={categories} 
                 currentCategoryID={currentCategoryID} 

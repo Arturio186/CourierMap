@@ -16,16 +16,17 @@ class ProductsController {
         } 
     }
 
-    static async GetProducts(req: Request, res: Response, next: NextFunction) {
+    static async Update(req: Request, res: Response, next: NextFunction) {
         try {
-            const { category_id } = req.params;
+            const { id } = req.params;
+            const { name, price } = req.body;
 
-            const products = await Product.GetProductsByCategoryID(Number(category_id));
-
-            res.json({status: 200, message: {products: products}});
+            const product = await Product.Update(Number(id), name, price);
+            
+            res.json({status: 200, message: {updatedProduct: product}});
         }
         catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
@@ -41,6 +42,21 @@ class ProductsController {
             console.log(error)
         }
     }
+
+    static async GetProducts(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { category_id } = req.params;
+
+            const products = await Product.GetProductsByCategoryID(Number(category_id));
+
+            res.json({status: 200, message: {products: products}});
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+    
 }
 
 export default ProductsController;
