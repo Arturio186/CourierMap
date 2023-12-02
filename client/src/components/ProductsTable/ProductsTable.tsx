@@ -1,25 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import classes from './ProductsTable.module.scss';
 
 import ProductsNavbar from '../ProductsNavbar/ProductsNavbar';
 
-import IProductsTableProps from '../../interfaces/IProductsTableProps';
 import IProduct from '../../interfaces/IProduct';
+import ICategory from '../../interfaces/ICategory';
+import { GetCategories, GetProductsByCategoryID } from '../../http/ProductsAPI';
 
-const ProductsTable : React.FC<IProductsTableProps> = ({categories}) => {
-    const [currentCategoryID, setCurrentCategoryID] = useState<number>(categories[0].category.id);
-    const [currentProductList, setCurrentProductList] = useState<Array<IProduct>>([]);
+const ProductsTable : React.FC = () => {
+    const [currentCategoryID, setCurrentCategoryID] = useState<number>(-1);
+    const [categoriesLoading, setCategoriesLoading] = useState(true);
+    const [categories, setCategories] = useState<Array<ICategory>>([]);
+
+    const [products, setProducts] = useState<Array<IProduct>>([]);
+    const [productsLoading, setProductsLoading] = useState(false);
+
+    useEffect(()=> {
+        (async () => {
+            const response = await GetCategories();
+
+            if (response.status === 200) {
+                setCurrentCategoryID(response.message.categories[0].id)
+                setCategories(response.message.categories)
+            }
+
+            setCategoriesLoading(false);
+        })();
+      }, []);
+
 
     useEffect(() => {
-        categories.map((category) => {
-            if (category.category.id === currentCategoryID) {
-                setCurrentProductList(category.products);
+        setProductsLoading(true);
+
+        (async () => {
+            const response = await GetProductsByCategoryID(currentCategoryID);
+
+            if (response.status === 200) {
+                setProducts(response.message.products);
             }
-        });
+
+            setProductsLoading(false);
+        })();
     }, [currentCategoryID]);
 
     return (
+        categoriesLoading || productsLoading ? 
+        <p>Загрузка...</p>
+        :
         <>
             <ProductsNavbar 
                 categories={categories} 
@@ -35,8 +63,8 @@ const ProductsTable : React.FC<IProductsTableProps> = ({categories}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {currentProductList.map((product) => {
-                        return <tr>
+                    {products.map((product) => {
+                        return <tr key={product.id}>
                             <td>{product.name}</td>
                             <td>{product.price}</td>
                             <td className={classes.actions}>
@@ -47,7 +75,7 @@ const ProductsTable : React.FC<IProductsTableProps> = ({categories}) => {
                     })}
                 </tbody>
             </table>
-        </>
+        </>   
     )
 }
 

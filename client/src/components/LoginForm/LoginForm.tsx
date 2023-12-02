@@ -9,7 +9,7 @@ import { REGISTER_ROUTE } from '../../utils/consts';
 import AuthInput from '../UI/AuthInput/AuthInput';
 import AuthButton from '../UI/AuthButton/AuthButton';
 
-import { authorization } from '../../http/CreditionalsAPI';
+import { Authorization } from '../../http/CreditionalsAPI';
 import { Context } from '../..';
 
 import classes from './LoginForm.module.scss';
@@ -25,7 +25,7 @@ const LoginForm : React.FC = observer(() => {
     const {user} = useContext(Context);
 
     const onSubmit: SubmitHandler<ILoginField> = async (data) => {
-        const response = await authorization(data.email, data.password);
+        const response = await Authorization(data.email, data.password);
         
         if (response.status == 200) {
             user.setUser(response.message);

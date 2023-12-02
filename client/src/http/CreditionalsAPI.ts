@@ -1,4 +1,4 @@
-import { authHost, host } from "./index";
+import { authHost, host } from ".";
 import { jwtDecode } from "jwt-decode";
 
 const ProccesResponse = (data : any) => {
@@ -17,7 +17,7 @@ const ProccesResponse = (data : any) => {
     return result
 }
 
-export const registration = async (email : string, password : string) => {
+export const Registration = async (email : string, password : string) => {
     const {data} = await host.post('creditionals/registartion', {
         email, password
     });
@@ -25,7 +25,7 @@ export const registration = async (email : string, password : string) => {
     return ProccesResponse(data);
 }
 
-export const authorization = async (email : string, password : string) => {
+export const Authorization = async (email : string, password : string) => {
     const {data} = await host.post('creditionals/authorization', {
         email, password
     });
@@ -33,7 +33,7 @@ export const authorization = async (email : string, password : string) => {
     return ProccesResponse(data);
 }
 
-export const authentication = async () => {
+export const Authentication = async () => {
     const {data} = await authHost.get('creditionals/authentication');
 
     return ProccesResponse(data);

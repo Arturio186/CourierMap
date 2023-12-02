@@ -5,8 +5,7 @@ import AuthRouter from './AuthRouter';
 import GuestRouter from './GuestRouter';
 
 import { Context } from '..';
-import { authentication } from '../http/CreditionalsAPI';
-import Navbar from '../components/UI/Navbar/Navbar';
+import { Authentication } from '../http/CreditionalsAPI';
 
 const AppRouter : React.FC = observer(() => {
     
@@ -16,7 +15,7 @@ const AppRouter : React.FC = observer(() => {
     useEffect(()=> {
         (async () => {
             if (localStorage.getItem('token')) {
-                const response = await authentication();
+                const response = await Authentication();
 
                 if (response.status == 200) {
                     user.setUser(response.message);
