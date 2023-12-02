@@ -14,6 +14,15 @@ class Product {
         return product;
     }
 
+    static async Delete(id : number) : Promise<void> {
+        try {
+            await db('products').where({id: id}).del()
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
     static async GetProductsByCategoryID(category_id : number) : Promise<IProductData[]> {
         return await db('products').select('*').where({category_id: category_id});
     }

@@ -11,3 +11,9 @@ export const GetProductsByCategoryID = async (category_id : number) => {
     
     return data;
 }
+
+export const DeleteProductByID = async (id : number) => {
+    const {data} = await authHost.delete(`products/delete/${id}`);
+    
+    return data;
+}

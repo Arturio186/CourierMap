@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import Product from "../Models/Product";
 
 class ProductsController {
-    static async Create(req: Request, res: Response, next: NextFunction) : Promise<void> {
+    static async Store(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try {
             const {category_id, name, price} = req.body;
         
@@ -24,6 +24,19 @@ class ProductsController {
             const products = await Product.GetProductsByCategoryID(Number(category_id));
 
             res.json({status: 200, message: {products: products}});
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+    static async Destroy(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;
+
+            await Product.Delete(Number(id))
+
+            res.json({status: 200, message: `Продукт с id ${id} успешно удален`});
         }
         catch (error) {
             console.log(error)

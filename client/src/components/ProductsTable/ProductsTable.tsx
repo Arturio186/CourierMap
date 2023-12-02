@@ -6,7 +6,7 @@ import ProductsNavbar from '../ProductsNavbar/ProductsNavbar';
 
 import IProduct from '../../interfaces/IProduct';
 import ICategory from '../../interfaces/ICategory';
-import { GetCategories, GetProductsByCategoryID } from '../../http/ProductsAPI';
+import { GetCategories, GetProductsByCategoryID, DeleteProductByID } from '../../http/ProductsAPI';
 
 const ProductsTable : React.FC = () => {
     const [currentCategoryID, setCurrentCategoryID] = useState<number>(-1);
@@ -44,6 +44,19 @@ const ProductsTable : React.FC = () => {
         })();
     }, [currentCategoryID]);
 
+    const DeleteProduct = async (id : number) => {
+        const response = await DeleteProductByID(id);
+
+        if (response.status === 200) {
+            console.log("Успешно удален")
+            setProducts(products.filter((product) => product.id != id))
+        }
+    }
+
+    const ChangeProduct = async (id : number) => {
+
+    }
+
     return (
         categoriesLoading || productsLoading ? 
         <p>Загрузка...</p>
@@ -68,8 +81,8 @@ const ProductsTable : React.FC = () => {
                             <td>{product.name}</td>
                             <td>{product.price}</td>
                             <td className={classes.actions}>
-                                <button>Изменить</button>
-                                <button>Удалить</button>
+                                <button onClick={() => ChangeProduct(product.id)}>Изменить</button>
+                                <button onClick={() => DeleteProduct(product.id)}>Удалить</button>
                             </td>
                         </tr>
                     })}
