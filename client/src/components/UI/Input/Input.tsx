@@ -5,17 +5,19 @@ import classes from './Input.module.scss';
 
 interface IFormInputProps {
     id: string;
+    value?: string;
     type: string;
     register: UseFormRegisterReturn<any>;
     error: FieldError | undefined;
     placeholder: string;
 }
 
-const Input : React.FC<IFormInputProps> = ({placeholder, type, register, error}) => {
+const Input : React.FC<IFormInputProps> = ({value, placeholder, type, register, error}) => {
     return (
         <>
             <input
                 {...register}
+                value={value}
                 type={type}
                 className={`${error ? `${classes.errorField}` : ''} ${classes.Input}`}
                 placeholder={placeholder}

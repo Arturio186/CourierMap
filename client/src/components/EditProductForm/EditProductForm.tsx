@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, SubmitHandler} from 'react-hook-form';
 
 import classes from './EditProductForm.module.scss'
@@ -24,22 +24,34 @@ interface IEditProductFormProps {
 }   
 
 const EditProductForm : React.FC<IEditProductFormProps> = ({targetProduct, products, setProducts, showNotification, setVisible}) => {
-    const {register, handleSubmit, formState: { errors }} = useForm<IEditProductField>({mode: "onChange"});
+    const {register, handleSubmit, formState: { errors }, setValue} = useForm<IEditProductField>({mode: "onChange"});
+    
+    useEffect(() => {
+        setValue('name', targetProduct.name);
+        setValue('price', targetProduct.price);
+    }, [targetProduct]);
 
     const onSubmit: SubmitHandler<IEditProductField> = async (data) => {
         const response = await EditProductByID(targetProduct.id, data.name, Number(data.price));
         
         if (response.status === 200) {
             const updatedProduct = response.message.updatedProduct;
+            /*
+            for (let i = 0; i < products.length; i++) {
+                if (products[i].id === updatedProduct.id) {
+                    products[i] = updatedProduct;
+                }
+            }
+            */
+            const updatedProducts = products.map((product) => product.id === updatedProduct.id ? updatedProduct : product)
 
-            const withoutTarget = products.filter((product) => product.id != updatedProduct.id);
+            setProducts(updatedProducts);
 
-            setProducts([...withoutTarget, updatedProduct]);
             showNotification(`Успешно изменен продукт ${updatedProduct.name}`);
 
             setVisible(false);
         } else {
-            showNotification(`Ошибка при добавлении. ${response.message}`)
+            showNotification(`Ошибка при изменении. ${response.message}`)
         }
     }
 

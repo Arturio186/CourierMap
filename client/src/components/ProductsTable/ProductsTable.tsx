@@ -18,7 +18,7 @@ import Modal from '../UI/Modal/Modal';
 
 const ProductsTable : React.FC = () => {
     const [currentCategoryID, setCurrentCategoryID] = useState<number>(-1);
-    const [targetProduct, setTargetProduct] = useState<IProduct | null>(null);
+    const [targetProduct, setTargetProduct] = useState<IProduct>({id: -1, name: '', price: -1, category_id: -1});
 
     const [categoriesLoading, setCategoriesLoading] = useState(true);
     const [categories, setCategories] = useState<Array<ICategory>>([]);
@@ -104,11 +104,11 @@ const ProductsTable : React.FC = () => {
             </Modal>
             <Modal visible={modalEditProduct} setVisible={setModalEditProduct}>
                 <EditProductForm 
-                    targetProduct={targetProduct as IProduct}
+                    targetProduct={targetProduct}
                     products={products}
                     setProducts={setProducts}
                     showNotification={showNotification}
-                    setVisible={setModalAddProduct}
+                    setVisible={setModalEditProduct}
                 />
             </Modal>
 
