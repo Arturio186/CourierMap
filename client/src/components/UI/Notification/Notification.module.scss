@@ -1,0 +1,31 @@
+.notification {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 20px;
+
+    background-color: rgba(0,0,0,0.7);
+    color: white;
+
+    border-radius: 5px;
+
+    display: flex;
+    align-items: center;
+    
+    width: 250px;
+    min-height: 60px;
+
+    button {
+        position: absolute;
+        padding: 10px;
+        top: 10px;
+        right: 10px;
+        color: white;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-size: 18px;
+    }
+}
+  
+  

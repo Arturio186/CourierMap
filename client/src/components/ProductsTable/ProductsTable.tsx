@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import ReactDOM from 'react-dom';
 
 import classes from './ProductsTable.module.scss';
 
@@ -8,6 +9,8 @@ import IProduct from '../../interfaces/IProduct';
 import ICategory from '../../interfaces/ICategory';
 import { GetCategories, GetProductsByCategoryID, DeleteProductByID } from '../../http/ProductsAPI';
 
+import Notification from '../UI/Notification/Notification';
+
 const ProductsTable : React.FC = () => {
     const [currentCategoryID, setCurrentCategoryID] = useState<number>(-1);
     const [categoriesLoading, setCategoriesLoading] = useState(true);
@@ -15,6 +18,8 @@ const ProductsTable : React.FC = () => {
 
     const [products, setProducts] = useState<Array<IProduct>>([]);
     const [productsLoading, setProductsLoading] = useState(false);
+
+    const [notification, setNotification] = useState<JSX.Element | null>(null);
 
     useEffect(()=> {
         (async () => {
@@ -44,12 +49,22 @@ const ProductsTable : React.FC = () => {
         })();
     }, [currentCategoryID]);
 
+    const showNotification = (message : string) => {
+        setNotification(<Notification 
+            message={message} 
+            onClose={() => setNotification(null)
+        } />);
+    };
+
     const DeleteProduct = async (id : number) => {
         const response = await DeleteProductByID(id);
 
         if (response.status === 200) {
-            console.log("Успешно удален")
+            showNotification(`Продукт с id ${id} успешно удален`)
             setProducts(products.filter((product) => product.id != id))
+        }
+        else {
+            showNotification("Не удалось удалить продукт")
         }
     }
 
@@ -57,37 +72,45 @@ const ProductsTable : React.FC = () => {
 
     }
 
+
     return (
         categoriesLoading || productsLoading ? 
         <p>Загрузка...</p>
         :
         <>
+            
             <ProductsNavbar 
                 categories={categories} 
                 currentCategoryID={currentCategoryID} 
                 setCurrentCategoryID={setCurrentCategoryID}
             />
-            <table>
-                <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>Цена</th>
-                        <th>Действие</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map((product) => {
-                        return <tr key={product.id}>
-                            <td>{product.name}</td>
-                            <td>{product.price}</td>
-                            <td className={classes.actions}>
-                                <button onClick={() => ChangeProduct(product.id)}>Изменить</button>
-                                <button onClick={() => DeleteProduct(product.id)}>Удалить</button>
-                            </td>
+            {products.length == 0 ? 
+                <p>Нет данных</p>
+                :
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Цена</th>
+                            <th>Действие</th>
                         </tr>
-                    })}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {products.map((product) => {
+                            return <tr key={product.id}>
+                                <td>{product.name}</td>
+                                <td>{product.price}</td>
+                                <td className={classes.actions}>
+                                    <button onClick={() => ChangeProduct(product.id)}>Изменить</button>
+                                    <button onClick={() => DeleteProduct(product.id)}>Удалить</button>
+                                </td>
+                            </tr>
+                        })}
+                    </tbody>
+                </table>
+            }
+            {notification &&
+                ReactDOM.createPortal(notification, document.body)}
         </>   
     )
 }
