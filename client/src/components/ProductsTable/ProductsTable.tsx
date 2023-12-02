@@ -10,6 +10,9 @@ import ICategory from '../../interfaces/ICategory';
 import { GetCategories, GetProductsByCategoryID, DeleteProductByID } from '../../http/ProductsAPI';
 
 import Notification from '../UI/Notification/Notification';
+import Button from '../UI/Button/Button';
+import Modal from '../UI/Modal/Modal';
+import AddProductForm from '../AddProductForm/AddProductForm';
 
 const ProductsTable : React.FC = () => {
     const [currentCategoryID, setCurrentCategoryID] = useState<number>(-1);
@@ -72,18 +75,34 @@ const ProductsTable : React.FC = () => {
 
     }
 
+    const [modalAddProduct, setModalAddProduct] = useState(false);
+
+    const OpenAddProductModal = (event : React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+
+        setModalAddProduct(true);
+    }
 
     return (
         categoriesLoading || productsLoading ? 
         <p>Загрузка...</p>
         :
         <>
-            
+            <Modal visible={modalAddProduct} setVisible={setModalAddProduct}>
+                <AddProductForm 
+                    category={currentCategoryID}
+                    products={products}
+                    setProducts={setProducts}
+                    showNotification={showNotification}
+                    setVisible={setModalAddProduct}
+                />
+            </Modal>
             <ProductsNavbar 
                 categories={categories} 
                 currentCategoryID={currentCategoryID} 
                 setCurrentCategoryID={setCurrentCategoryID}
             />
+            <Button onClick={() => setModalAddProduct(true)}>Добавить продукт</Button>
             {products.length == 0 ? 
                 <p>Нет данных</p>
                 :

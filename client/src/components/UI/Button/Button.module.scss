@@ -1,0 +1,21 @@
+.button {
+
+
+    padding: 10px 10px;
+    font-size: 12px;
+    
+    background-color: #222;
+    color: #fff;
+
+    border-radius: 5px;
+    border: 1px solid #222;
+
+    transition: opacity 0.3s ease;
+
+    font-family: 'Inter', sans-serif;
+}
+
+.button:hover {
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}

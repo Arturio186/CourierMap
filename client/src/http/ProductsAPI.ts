@@ -17,3 +17,11 @@ export const DeleteProductByID = async (id : number) => {
     
     return data;
 }
+
+export const AddProduct = async (name: string, price: number, category_id: number) => {
+    const {data} = await authHost.post('products/create', {
+        name, price, category_id
+    });
+
+    return data;
+}
