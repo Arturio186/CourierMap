@@ -1,23 +1,18 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useForm, SubmitHandler} from 'react-hook-form';
-
 import { observer } from 'mobx-react-lite';
-
-import { REGISTER_ROUTE } from '../../utils/consts';
-
-import AuthInput from '../UI/AuthInput/AuthInput';
-import AuthButton from '../UI/AuthButton/AuthButton';
-
-import { Authorization } from '../../http/CreditionalsAPI';
-import { Context } from '../..';
 
 import classes from './LoginForm.module.scss';
 
-interface ILoginField {
-    email: string
-    password: string
-}
+import ILoginField from 'interfaces/ILoginField';
+
+import { REGISTER_ROUTE } from 'utils/consts';
+import { Authorization } from 'http/CreditionalsAPI';
+import { Context } from '../..';
+
+import AuthInput from '../UI/AuthInput/AuthInput';
+import AuthButton from '../UI/AuthButton/AuthButton';
 
 const LoginForm : React.FC = observer(() => {
     const {register, handleSubmit, formState: { errors }} = useForm<ILoginField>({mode: "onChange"})

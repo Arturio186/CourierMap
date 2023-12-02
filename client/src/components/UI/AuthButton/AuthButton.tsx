@@ -1,10 +1,8 @@
 import React from 'react';
 
 import classes from './AuthButton.module.scss';
+import IAuthButtonProps from 'interfaces/props/IAuthButtonProps';
 
-interface IAuthButtonProps {
-    children: React.ReactNode;
-}
 const AuthButton : React.FC<IAuthButtonProps> = ({children}) => {
     return (
         <button className={classes.authButton}>{children}</button>

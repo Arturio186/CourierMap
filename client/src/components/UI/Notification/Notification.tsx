@@ -2,10 +2,7 @@ import React, { useEffect } from 'react';
 
 import classes from './Notification.module.scss';
 
-interface INotificationProps {
-    message: string;
-    onClose: () => void;
-}
+import INotificationProps from 'interfaces/props/INotificationProps';
 
 const Notification : React.FC<INotificationProps> = ({ message, onClose }) => {
   useEffect(() => {

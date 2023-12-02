@@ -2,27 +2,12 @@ import React, {useEffect, useRef, useState, useContext} from 'react';
 import { observer } from 'mobx-react-lite';
 import { YMaps, Map, Button, Placemark } from '@pbe/react-yandex-maps';
 
-import Modal from '../../components/UI/Modal/Modal';
-
 import './CourierMap.scss';
-import { Context } from '../..';
 
-interface ICourier {
-    id: number; 
-    name: string;
-    surname: string;
-    x: number;
-    y: number;
-}
+import ICourier from 'interfaces/ICourier';
+import IOrder from 'interfaces/IOrder';
 
-interface IOrder {
-    num: number;
-    products: Array<string>;
-    address: string;
-    courier_id: number | null;
-    x: number;
-    y: number;
-}
+import Modal from 'components/UI/Modal/Modal';
 
 const CourierMap : React.FC = observer(() => {
     const [couriers, setCouriers] = useState<Array<ICourier>>([

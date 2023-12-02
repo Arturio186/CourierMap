@@ -1,11 +1,8 @@
 import React from "react";
+
 import classes from './Modal.module.scss';
 
-interface IModalProps {
-    children: React.ReactNode;
-    visible: boolean;
-    setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import IModalProps from "interfaces/props/IModalProps";
 
 const Modal : React.FC<IModalProps> = ({children, visible, setVisible}) => {
     const rootClasses = [classes.modal];

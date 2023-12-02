@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import './Products.scss';
 
-import ProductsTable from '../../components/ProductsTable/ProductsTable';
+import ProductsTable from 'components/ProductsTable/ProductsTable';
 
 const Products : React.FC = () => {
     return (

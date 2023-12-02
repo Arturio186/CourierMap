@@ -1,4 +1,4 @@
-import ICategory from "./ICategory";
+import ICategory from "../ICategory";
 
 export default interface IProductsNavbarProps {
     categories: Array<ICategory>;

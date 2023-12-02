@@ -2,13 +2,8 @@ import React from 'react';
 
 import classes from './ProductsNavbar.module.scss';
 
-import IProductsNavbarProps from '../../interfaces/IProductsNavbarProps';
-import IProductsList from '../../interfaces/IProductsList';
-
-interface ICategory {
-    id: number;
-    name: string;
-}
+import IProductsNavbarProps from 'interfaces/props/IProductsNavbarProps';
+import ICategory from 'interfaces/ICategory';
 
 const ProductsNavbar : React.FC<IProductsNavbarProps> = ({categories, currentCategoryID, setCurrentCategoryID}) => {
     return (

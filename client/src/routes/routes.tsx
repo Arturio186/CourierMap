@@ -14,17 +14,13 @@ import Products from "../pages/Products/Products";
 export const publicRoutes : Array<IRoute> = [
     {path: LOGIN_ROUTE, element: <Login/>, title: "Авторизация"},
     {path: REGISTER_ROUTE, element: <Register/>, title: "Регистрация"},
-
     {path: '*', element: <Navigate to={LOGIN_ROUTE}/>, title: "Переадресация"}
 ]
 
 export const privateRoutes : Array<IRoute> = [
-    {
-        path: '/', element: <MainLayout />, title: 'Шаблон', children: [
-            {path: MAP_ROUTE, element: <CourierMap/>, title: "Карта курьеров"},
-            {path: '/products', element: <Products/>, title: "Товары"},
-        ]
-    },
-    
+    {path: '/', element: <MainLayout />, title: 'Шаблон', children: [
+        {path: MAP_ROUTE, element: <CourierMap/>, title: "Карта курьеров"},
+        {path: '/products', element: <Products/>, title: "Товары"},
+    ]},
     {path: '*', element: <Navigate to={MAP_ROUTE}/>, title: "Переадресация"}
 ]

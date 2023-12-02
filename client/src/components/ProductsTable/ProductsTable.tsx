@@ -5,6 +5,7 @@ import classes from './ProductsTable.module.scss';
 
 import IProduct from 'interfaces/IProduct';
 import ICategory from 'interfaces/ICategory';
+
 import { GetCategories, GetProductsByCategoryID, DeleteProductByID } from 'http/ProductsAPI';
 
 import ProductsNavbar from 'components/ProductsNavbar/ProductsNavbar';
@@ -14,7 +15,6 @@ import EditProductForm from 'components/EditProductForm/EditProductForm';
 import Notification from '../UI/Notification/Notification';
 import Button from '../UI/Button/Button';
 import Modal from '../UI/Modal/Modal';
-
 
 const ProductsTable : React.FC = () => {
     const [currentCategoryID, setCurrentCategoryID] = useState<number>(-1);
@@ -84,7 +84,6 @@ const ProductsTable : React.FC = () => {
                 setTargetProduct(product);
             }
         })
-
         setModalEditProduct(true);
     }
 

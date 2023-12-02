@@ -5,7 +5,7 @@ import AuthRouter from './AuthRouter';
 import GuestRouter from './GuestRouter';
 
 import { Context } from '..';
-import { Authentication } from '../http/CreditionalsAPI';
+import { Authentication } from 'http/CreditionalsAPI';
 
 const AppRouter : React.FC = observer(() => {
     
@@ -25,9 +25,10 @@ const AppRouter : React.FC = observer(() => {
                     console.log(response.message)
                 }
             }
+
             setLoading(false);
         })();
-      }, []);
+    }, []);
 
     return (
         loading ? <div>Загрузка...</div> : user.isAuth ? 

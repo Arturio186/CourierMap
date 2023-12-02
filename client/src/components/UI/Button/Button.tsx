@@ -2,10 +2,7 @@ import React from 'react';
 
 import classes from './Button.module.scss';
 
-interface IButtonProps {
-    children: React.ReactNode;
-    onClick?: (event : React.MouseEvent<HTMLElement>) => void;
-}
+import IButtonProps from 'interfaces/props/IButtonProps';
 
 const Button : React.FC<IButtonProps> = ({children, onClick}) => {
     return (

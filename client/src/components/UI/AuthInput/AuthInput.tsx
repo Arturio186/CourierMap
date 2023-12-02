@@ -1,17 +1,10 @@
-import React, {FC} from 'react';
-import {UseFormRegisterReturn, FieldError} from 'react-hook-form';
+import React from 'react';
 
 import classes from './AuthInput.module.scss';
 
-interface IAuthInputProps {
-    id: string;
-    type: string;
-    register: UseFormRegisterReturn<any>;
-    error: FieldError | undefined;
-    placeholder: string;
-}
+import IAuthInputProps from 'interfaces/props/IAuthInputProps';
 
-const AuthInput : FC<IAuthInputProps> = ({placeholder, type, register, error}) => {
+const AuthInput : React.FC<IAuthInputProps> = ({placeholder, type, register, error}) => {
     return (
         <>
             <input

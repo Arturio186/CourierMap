@@ -1,10 +1,11 @@
-import React, {useContext, useEffect} from "react";
+import { useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { observer } from "mobx-react-lite";
 
 import classes from './Navbar.module.scss';
-import { privateRoutes } from "../../../routes/routes";
+
+import { privateRoutes } from "routes/routes";
 import { Context } from "../../..";
-import { observer } from "mobx-react-lite";
 
 const Navbar = observer(() => {
     const currentPath = useLocation().pathname;
