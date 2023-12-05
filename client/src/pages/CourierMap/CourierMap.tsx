@@ -17,18 +17,17 @@ const CourierMap : React.FC = observer(() => {
     ]);
 
     const [orders, setOrders] = useState<Array<IOrder>>([
-        {num: 1, products: ['Яблоко', 'Банан', 'Грушка'], address: 'г.Тюмень, ул. Ленина, д.25', courier_id: 1, x: 57.1453, y: 65.5552},
-        {num: 2, products: ['Яблоко', 'Грушка', 'Грушка'], address: 'г.Тюмень, ул. Киевская, д.1', courier_id: 1, x: 57.1443, y: 65.5342},
-        {num: 3, products: ['Грушка', 'Банан', 'Грушка'], address: 'г.Тюмень, ул. Харьковская, д.20', courier_id: 2, x: 57.1463, y: 65.5562},
-        {num: 4, products: ['Яблоко', 'Банан', 'Яблоко'], address: 'г.Тюмень, ул. Вьюжная, д.21', courier_id: null, x: 57.1473, y: 65.5532},
-        {num: 5, products: ['Банан', 'Банан', 'Банан'], address: 'г.Тюмень, ул. Володарского, д.22', courier_id: 3, x: 57.1453, y: 65.5352},
-        {num: 6, products: ['Яблоко', 'Яблоко', 'Яблоко'], address: 'г.Тюмень, ул. Республики, д.24', courier_id: 3, x: 57.1453, y: 65.5572}
+        {price: 5320, num: 1, products: ['Яблоко', 'Банан', 'Грушка'], address: 'г.Тюмень, ул. Ленина, д.25', courier_id: 1, x: 57.1453, y: 65.5552},
+        {price: 5320, num: 2, products: ['Яблоко', 'Грушка', 'Грушка'], address: 'г.Тюмень, ул. Киевская, д.1', courier_id: 1, x: 57.1443, y: 65.5342},
+        {price: 5320, num: 3, products: ['Грушка', 'Банан', 'Грушка'], address: 'г.Тюмень, ул. Харьковская, д.20', courier_id: 2, x: 57.1463, y: 65.5562},
+        {price: 5320, num: 4, products: ['Яблоко', 'Банан', 'Яблоко'], address: 'г.Тюмень, ул. Вьюжная, д.21', courier_id: null, x: 57.1473, y: 65.5532},
+        {price: 5320, num: 5, products: ['Банан', 'Банан', 'Банан'], address: 'г.Тюмень, ул. Володарского, д.22', courier_id: 3, x: 57.1453, y: 65.5352},
+        {price: 5320, num: 6, products: ['Яблоко', 'Яблоко', 'Яблоко'], address: 'г.Тюмень, ул. Республики, д.24', courier_id: 3, x: 57.1453, y: 65.5572}
     ])
 
-    const [targetCourier, setTargetCourier] = useState<ICourier>(couriers[0]);
+    const [targetCourier, setTargetCourier] = useState<ICourier | null>(null);
     const [targetOrder, setTargetOrder] = useState<IOrder>({} as IOrder);
 
-    const [modalCourier, setModalCourier] = useState<boolean>(false);
     const [modalOrder, setModalOrder] = useState<boolean>(false);
 
     const mapRef = useRef<any>(null);
@@ -65,6 +64,11 @@ const CourierMap : React.FC = observer(() => {
     }
 
     const setFocusOnCourier = (id : string) => {
+        if (Number(id) === -1) {
+            setTargetCourier(null);
+            return;
+        }
+
         couriers.forEach((courier) => {
             if (courier.id === Number(id)) {
                 setTargetCourier(courier);
@@ -72,12 +76,6 @@ const CourierMap : React.FC = observer(() => {
             }
         })
     }
-
-    const openCourierModal = (event: React.MouseEvent<HTMLElement>) => {
-        event.preventDefault();
-        
-        setModalCourier(true)
-    } 
 
     const openOrderModal = (event: React.MouseEvent<HTMLElement>, id : number) => {
         event.preventDefault();
@@ -104,15 +102,6 @@ const CourierMap : React.FC = observer(() => {
 
     return (
         <div className="inner-content">
-            <Modal visible={modalCourier} setVisible={setModalCourier}>
-                <p><b>Курьер:</b> {`${targetCourier.name} ${targetCourier.surname}`}</p>
-                <h3>Активные заказы</h3>
-                {orders.map((order) => {
-                    if (order.courier_id === targetCourier.id) {
-                        return <p>Номер: {order.num}, Товары: {order.products}, Адрес: {order.address}</p>
-                    }
-                })}
-            </Modal>
             <Modal visible={modalOrder} setVisible={setModalOrder}>
                 <p> Номер заказа: {targetOrder.num}</p>
                 <p> Cодержимое: {targetOrder.products?.map((product) => {
@@ -122,44 +111,48 @@ const CourierMap : React.FC = observer(() => {
             </Modal>
             <div className="window">
                 <div className="menu">
-                    <h3>Курьеры</h3>
-                    <form className="couriers-menu">
-                        <select name="courier" id="courier" onChange={(e) => setFocusOnCourier(e.target.value)}>
-                            <option style={{display: 'none'}} selected={true} disabled={true}>Выбрать курьера</option>
-                            {couriers.map((courier) => { 
-                                return <option key={courier.id} value={courier.id}>
-                                    {`${courier.name} ${courier.surname}`}
-                                </option>
-                                })}
-                        </select>
-                        <button onClick={openCourierModal}>Подробнее</button>
-                    </form>
-                    
-                    <h3>Заказы</h3>
+                    <div className="menu__row">
+                        <div>
+                            <h3>Заказы</h3>
+                            {targetCourier && <p>Курьер: {targetCourier.name} {targetCourier.surname}</p>}
+                        </div>
+                        
+                        <form className="couriers-menu">
+                            <select name="courier" id="courier" onChange={(e) => setFocusOnCourier(e.target.value)}>
+                                <option value="-1">Все курьеры</option>
+                                {couriers.map((courier) => { 
+                                    return <option key={courier.id} value={courier.id}>
+                                        {`${courier.name} ${courier.surname}`}
+                                    </option>
+                                    })}
+                            </select>
+                        </form>
+                    </div>
                     <div className="orders">
                         {orders.map((order) => {
-                            return <div 
+                            if (targetCourier === null || targetCourier.id === order.courier_id) {
+                                return <div 
                                     className="order" 
                                     key={order.num} 
                                     onClick={(e) => openOrderModal(e, order.num)}
                                 >
                                 <div className="card">
-                                    <p>Заказ №{order.num}</p>
+                                    <p className="num">Заказ №{order.num}</p>
                                     <div className="columns">
                                         <div className="left-column">
-                                            <h3>Содержимое заказа</h3>
-                                            {order.products.map((product) => {
-                                                return <p>{product}</p>
-                                            })}
+                                            <p>Клиент: Артём</p>
+                                            <p>+79124199313</p>
+                                            <p>Стоимость: <b>{order.price}</b> руб.</p>
                                         </div>
                                         <div className="right-column">
                                             <h3>Адрес доставки</h3>
                                             <p>Адрес: {order.address}</p>
                                         </div> 
                                     </div>
-                                    <p className="status">Статус: {order.courier_id == null ? 'Свободный' : 'Доставляется'}</p>
+                                    <p className="status">Статус: <b>{order.courier_id == null ? 'Свободный' : 'Доставляется'}</b></p>
                                 </div>
                             </div>
+                            }
                         })}
                     </div>
                 </div>
@@ -177,7 +170,8 @@ const CourierMap : React.FC = observer(() => {
                         >
                             <Button
                                 options={{ maxWidth: 128, selectOnClick: false }}
-                                data={{ content: "click" }}
+                                data={{ content: "Создать заказ" }}
+                                onClick={() => alert('click')}
                             />
                             {
                                 couriers.map((courier) => {
@@ -192,7 +186,7 @@ const CourierMap : React.FC = observer(() => {
                                             iconColor: 'blue',
                                         }} 
                                         properties={{
-                                            hintContent: 'Курьерчик',
+                                            hintContent: `${courier.name} ${courier.surname}`,
                                             balloonContent: `${courier.name} ${courier.surname}`
                                         }}
                                     />
@@ -211,7 +205,7 @@ const CourierMap : React.FC = observer(() => {
                                             iconColor: order.num === targetOrder.num ? 'red' : 'green',
                                         }} 
                                         properties={{
-                                            hintContent: 'Заказик',
+                                            hintContent: `Заказ ${order.num}`,
                                         }}
                                         onClick={
                                             (event : React.MouseEvent<HTMLElement>) => proccesMapClick(event, order.num)
