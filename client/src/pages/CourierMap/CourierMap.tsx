@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState, useContext} from 'react';
 import { observer } from 'mobx-react-lite';
-import { YMaps, Map, Placemark, Button, Clusterer, SearchControl } from '@pbe/react-yandex-maps';
+import { YMaps, Map, Placemark, Button, Clusterer, SearchControl  } from '@pbe/react-yandex-maps';
 
 import './CourierMap.scss';
 
@@ -29,7 +29,12 @@ const CourierMap : React.FC = observer(() => {
     const [targetOrder, setTargetOrder] = useState<IOrder>({} as IOrder);
 
     const [modalOrder, setModalOrder] = useState<boolean>(false);
+    const [modalCreateOrder, setModalCreateOrder] = useState<boolean>(false);
 
+    const creatorPlacemarkRef = useRef<any>(null);
+    const [creatorPlacemark, setCreatorPlacemark] = useState<React.ReactNode>(null);
+
+    const searchControlRef = useRef<any>(null);
     const mapRef = useRef<any>(null);
 
     useEffect(()=>{
@@ -78,8 +83,6 @@ const CourierMap : React.FC = observer(() => {
     }
 
     const openOrderModal = (event: React.MouseEvent<HTMLElement>, id : number) => {
-        event.preventDefault();
-
         orders.forEach((order) => {
             if (order.num === id) {
                 setTargetOrder(order);
@@ -100,8 +103,49 @@ const CourierMap : React.FC = observer(() => {
         })
     }
 
+    const handleResultShow = () => {
+        const searchControlRefCurrent = searchControlRef.current;
+
+        if (searchControlRefCurrent) {
+            const results = searchControlRefCurrent.getResultsArray();
+    
+            searchControlRefCurrent.hideResult();
+            
+            if (results.length > 0) {
+                const firstResult = results[0];
+                const coordinates = firstResult.geometry.getCoordinates();
+
+                addCreatorPlacemark(coordinates);
+            }
+        }
+    };
+
+    const addCreatorPlacemark = (coords: Array<number>) => {
+        setCreatorPlacemark(<Placemark
+            onClick={() => setModalCreateOrder(true)}
+            instanceRef={(placemark : any) => creatorPlacemarkRef.current = placemark}
+            geometry={{
+                type: 'Point',
+                coordinates: coords
+            }}
+            options={{
+                preset: 'islands#dotIcon',
+                iconColor: 'red',
+                draggable: true
+            }} 
+            properties={{
+                hintContent: 'Чтобы создать заказ, нажми на меня!'
+            }}
+        />)
+    }
+
     return (
         <div className="inner-content">
+            {creatorPlacemarkRef.current && <Modal visible={modalCreateOrder} setVisible={setModalCreateOrder}>
+                Здесь форма создания заказа
+                <p>{creatorPlacemarkRef.current.geometry._coordinates[0]}</p>
+                <p>{creatorPlacemarkRef.current.geometry._coordinates[1]}</p>
+            </Modal>}
             <Modal visible={modalOrder} setVisible={setModalOrder}>
                 <p> Номер заказа: {targetOrder.num}</p>
                 <p> Cодержимое: {targetOrder.products?.map((product) => {
@@ -159,19 +203,20 @@ const CourierMap : React.FC = observer(() => {
                 <div className="map">
                     <YMaps query={{
                         apikey: '0b375996-25a4-4d5d-9152-504fa8810cd2',
+                        suggest_apikey: 'fd6f5511-dbbe-4db1-bc61-b5f9a6b71f37'
                     }}>
                         <Map
                             width="100%"
                             height="80vh"
                             modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
-                            defaultState={{center: [57.1493, 65.5412], zoom: 15}}
+                            defaultState={{center: [57.1493, 65.5412], zoom: 15, controls: []}}
                             instanceRef={(map : any) => mapRef.current = map}
                             options={{suppressMapOpenBlock: true}}
                         >
                             <Button
                                 options={{ maxWidth: 128, selectOnClick: false }}
                                 data={{ content: "Создать заказ" }}
-                                onClick={() => alert('click')}
+                                onClick={() => addCreatorPlacemark(mapRef.current.getCenter())}
                             />
                             {
                                 couriers.map((courier) => {
@@ -224,7 +269,12 @@ const CourierMap : React.FC = observer(() => {
                                 })
                             }
                             </Clusterer>
-                            <SearchControl options={{ float: "right" }} />
+                            <SearchControl 
+                                options={{ float: "right" }} 
+                                instanceRef={(searchControl : any) => searchControlRef.current = searchControl}
+                                onResultShow={handleResultShow}
+                            />
+                            {creatorPlacemark}
                         </Map>
                     </YMaps>
                     <p className="annotation">
