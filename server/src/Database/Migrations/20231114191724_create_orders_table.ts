@@ -7,10 +7,11 @@ export async function up(knex: Knex) : Promise<void> {
         table.increments('id').primary();
         table.integer('courier_id').references('users.id');
         
-        table.string('status',30);
-        table.string('adress',200);
-        table.string('note',200);
-        table.string('phone',25);
+        table.integer('status').defaultTo(1);
+        table.string('address', 200);
+        table.string('note', 200);
+        table.string('client_name', 50);
+        table.string('client_phone', 25);
        
         table.timestamp('order_time');
         table.timestamp('delivery_time');
