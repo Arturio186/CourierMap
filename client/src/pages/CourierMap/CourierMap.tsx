@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState, useContext} from 'react';
 import { observer } from 'mobx-react-lite';
-import { YMaps, Map, Placemark, Button, Clusterer } from '@pbe/react-yandex-maps';
+import { YMaps, Map, Placemark, Button, Clusterer, SearchControl } from '@pbe/react-yandex-maps';
 
 import './CourierMap.scss';
 
@@ -224,6 +224,7 @@ const CourierMap : React.FC = observer(() => {
                                 })
                             }
                             </Clusterer>
+                            <SearchControl options={{ float: "right" }} />
                         </Map>
                     </YMaps>
                     <p className="annotation">
