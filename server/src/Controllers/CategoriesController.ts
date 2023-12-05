@@ -3,17 +3,44 @@ import { Request, Response, NextFunction } from "express";
 import Category from "../Models/Category";
 
 class CategoriesController {
-    static async Create(req: Request, res: Response, next: NextFunction) : Promise<void> {
+    static async Store(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try {
             const {name} = req.body;
         
             const category = await Category.Create(name);
 
-            res.json({status: 200, message: {category_id: category.id}});
+            res.json({status: 200, message: {createdCategory: category}});
         }
         catch (error) {
             console.log(error);
         } 
+    }
+
+    static async Update(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;
+            const { name } = req.body;
+
+            const category = await Category.Update(Number(id), name);
+            
+            res.json({status: 200, message: {updatedCategory: category}});
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    static async Destroy(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;
+
+            await Category.Delete(Number(id))
+
+            res.json({status: 200, message: `Категория с id ${id} успешно удалена`});
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 
     static async GetCategories(req: Request, res: Response, next: NextFunction) {

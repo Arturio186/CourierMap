@@ -1,0 +1,30 @@
+table {
+    margin-top: 20px;
+    margin-bottom: 50px;
+
+    border: 1px solid black;
+    border-radius: 10px;
+
+
+    width: 70%;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+tr {
+    display: grid;
+    grid-template-columns: 5fr 4fr 3fr;
+}
+
+thead tr {
+    border-bottom: 1px solid #666;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ddd;
+}
+
+

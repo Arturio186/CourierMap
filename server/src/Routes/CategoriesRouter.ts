@@ -3,7 +3,9 @@ import CategoriesController from "../Controllers/CategoriesController";
 
 const router = Router();
 
-router.post('/create', CategoriesController.Create);
+router.post('/create', CategoriesController.Store);
+router.post('/edit/:id', CategoriesController.Update);
+router.delete('/delete/:id', CategoriesController.Destroy);
 router.get('/', CategoriesController.GetCategories);
 
 export default router;

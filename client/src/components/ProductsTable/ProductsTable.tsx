@@ -6,7 +6,8 @@ import classes from './ProductsTable.module.scss';
 import IProduct from 'interfaces/IProduct';
 import ICategory from 'interfaces/ICategory';
 
-import { GetCategories, GetProductsByCategoryID, DeleteProductByID } from 'http/ProductsAPI';
+import { GetProductsByCategoryID, DeleteProductByID } from 'http/ProductsAPI';
+import { GetCategories } from 'http/CategoriesAPI';
 
 import ProductsNavbar from 'components/ProductsNavbar/ProductsNavbar';
 import AddProductForm from 'components/AddProductForm/AddProductForm';
