@@ -7,7 +7,9 @@ class OrdersController {
         try {
             const orders = await Order.GetOrders();
 
-            res.json({status: 200, message: {products: orders}});
+            await Order.GetOrders();
+
+            res.json({status: 200, message: {orders: orders}});
         }
         catch (error) {
             console.log(error)
