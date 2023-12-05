@@ -100,6 +100,8 @@ h1 {
         height: 100%;
         overflow: auto;
         
+        margin-bottom: 5px;
+
         .order {
             display: flex;
             flex-direction: row;
@@ -168,11 +170,8 @@ h1 {
     
         .order:hover {
             background-color: #e7e7e7;
-            cursor: pointer;
-        }
-
-        .order:last-child {
             
+            cursor: pointer;
         }
     }
     
@@ -185,4 +184,8 @@ h1 {
         border: none;
         border-radius: 20px;
     }
+}
+
+.annotation {
+    text-align: center;
 }

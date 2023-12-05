@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState, useContext} from 'react';
 import { observer } from 'mobx-react-lite';
-import { YMaps, Map, Button, Placemark } from '@pbe/react-yandex-maps';
+import { YMaps, Map, Placemark, Button, Clusterer } from '@pbe/react-yandex-maps';
 
 import './CourierMap.scss';
 
@@ -175,46 +175,62 @@ const CourierMap : React.FC = observer(() => {
                             />
                             {
                                 couriers.map((courier) => {
-                                    return <Placemark
-                                        key={courier.id}
-                                        geometry={{
-                                            type: 'Point',
-                                            coordinates: [courier.x, courier.y]
-                                        }}
-                                        options={{
-                                            preset: 'islands#circleIcon',
-                                            iconColor: 'blue',
-                                        }} 
-                                        properties={{
-                                            hintContent: `${courier.name} ${courier.surname}`,
-                                            balloonContent: `${courier.name} ${courier.surname}`
-                                        }}
-                                    />
+                                    if (targetCourier === null || targetCourier.id === courier.id) {
+                                        return <Placemark
+                                            key={courier.id}
+                                            geometry={{
+                                                type: 'Point',
+                                                coordinates: [courier.x, courier.y]
+                                            }}
+                                            options={{
+                                                preset: 'islands#circleIcon',
+                                                iconColor: 'blue',
+                                            }} 
+                                            properties={{
+                                                hintContent: `${courier.name} ${courier.surname}`,
+                                                balloonContent: `${courier.name} ${courier.surname}`
+                                            }}
+                                        />
+                                    }
                                 })
                             }
+                            <Clusterer
+                                options={{
+                                    preset: "islands#invertedBlueClusterIcons",
+                                    groupByCoordinates: false,
+                                }}
+                            >
                             {
                                 orders.map((order) => {
-                                    return <Placemark
-                                        key={order.num}
-                                        geometry={{
-                                            type: 'Point',
-                                            coordinates: [order.x, order.y]
-                                        }}
-                                        options={{
-                                            preset: 'islands#dotIcon',
-                                            iconColor: order.num === targetOrder.num ? 'red' : 'green',
-                                        }} 
-                                        properties={{
-                                            hintContent: `Заказ ${order.num}`,
-                                        }}
-                                        onClick={
-                                            (event : React.MouseEvent<HTMLElement>) => proccesMapClick(event, order.num)
-                                        }
-                                    />
+                                    if (targetCourier === null || targetCourier.id === order.courier_id) {
+                                        return <Placemark
+                                            key={order.num}
+                                            geometry={{
+                                                type: 'Point',
+                                                coordinates: [order.x, order.y]
+                                            }}
+                                            options={{
+                                                preset: 'islands#dotIcon',
+                                                iconColor:  order.courier_id !== null ? order.num === targetOrder.num ? 'blue' : 'green' : 'red',
+                                            }} 
+                                            properties={{
+                                                hintContent: `Заказ ${order.num}`,
+                                            }}
+                                            onClick={
+                                                (event : React.MouseEvent<HTMLElement>) => proccesMapClick(event, order.num)
+                                            }
+                                        />
+                                    }
                                 })
                             }
+                            </Clusterer>
                         </Map>
                     </YMaps>
+                    <p className="annotation">
+                        <img src="./images/Red.svg" /> - свободный&nbsp;
+                        <img src="./images/Green.svg" /> - доставляется&nbsp; 
+                        <img src="./images/Blue.svg" /> - выбранный 
+                    </p>
                 </div>
             </div>
         </div>
