@@ -1,11 +1,16 @@
 .container {
+    min-width: 400px;
+
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 
     .title {
         font-size: 24px;
         font-weight: 500;
+
+        margin-bottom: 40px;
     }
 
     .form {

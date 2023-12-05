@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import classes from './Categories.module.scss';
 
-import { GetCategories, DeleteCategoryByID, EditCategoryByID } from 'http/CategoriesAPI';
+import { GetCategories, DeleteCategoryByID } from 'http/CategoriesAPI';
 
 import ICategory from 'interfaces/ICategory';
 
@@ -88,25 +88,29 @@ const CategoriesTable : React.FC = () => {
                 />
             </Modal>
             <Button onClick={() => setModalAddCategory(true)}>Добавить категорию</Button>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>Действие</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {categories.map((category) => {
-                        return <tr key={category.id}>
-                            <td>{category.name}</td>
-                            <td className={classes.actions}>
-                                <button onClick={() => ChangeCategory(category.id)}>Изменить</button>
-                                <button onClick={() => DeleteCategory(category.id)}>Удалить</button>
-                            </td>
-                        </tr>
-                    })}
-                </tbody>
-            </table>
+            {categories.length === 0 ? 
+                <p>Нет данных</p>
+                :
+                <div className={classes.table}>
+                    <div className={classes.table__head}>
+                        <div className={classes.table__row}>
+                            <p>Название</p>
+                            <p>Действие</p>
+                        </div>
+                    </div>
+                    <div className={classes.table__body}>
+                        {categories.map((category) => {
+                            return <div className={classes.table__row} key={category.id}>
+                                <p>{category.name}</p>
+                                <p className={classes.actions}>
+                                    <button onClick={() => ChangeCategory(category.id)}>Изменить</button>
+                                    <button onClick={() => DeleteCategory(category.id)}>Удалить</button>
+                                </p>
+                            </div>
+                        })}
+                    </div>
+                </div>
+            }
             {notification &&
                 ReactDOM.createPortal(notification, document.body)}
         </>}

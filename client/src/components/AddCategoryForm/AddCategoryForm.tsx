@@ -18,7 +18,7 @@ const AddCategoryForm : React.FC<IAddCategoryFormProps> = ({categories, setCateg
 
     const onSubmit: SubmitHandler<IAddCategoryField> = async (data) => {
         setLoading(true);
-        alert(data);
+        
         const response = await AddCategory(data.name);
         
         if (response.status === 200) {

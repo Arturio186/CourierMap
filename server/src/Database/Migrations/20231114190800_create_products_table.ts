@@ -7,7 +7,8 @@ export async function up(knex: Knex) : Promise<void> {
         table.decimal('price').unsigned();
         table.string('name', 300).notNullable();
 
-        table.integer('category_id').unsigned().references('products_categories.id');
+        table.integer('category_id').unsigned().
+            references('categories.id').onDelete('CASCADE');
     });
 };
 

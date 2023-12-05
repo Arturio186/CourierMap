@@ -3,7 +3,7 @@ import ICategoryData from '../Interfaces/ICategoryData';
 
 class Category {
     static async Create(name: string) : Promise<ICategoryData> {
-        const [category] : ICategoryData[] = await db('products_categories')
+        const [category] : ICategoryData[] = await db('categories')
             .insert({ 
                 name: name
             })
@@ -14,7 +14,7 @@ class Category {
 
     static async Delete(id : number) : Promise<void> {
         try {
-            await db('products_categories').where({id: id}).del()
+            await db('categories').where({id: id}).del()
         }
         catch (error) {
             throw error;
@@ -22,7 +22,7 @@ class Category {
     }
 
     static async Update(id: number, name: string) : Promise<ICategoryData> {
-        const [category] : ICategoryData[] = await db('products_categories').where({id: id})
+        const [category] : ICategoryData[] = await db('categories').where({id: id})
             .update({
                 name: name,
             })
@@ -32,7 +32,7 @@ class Category {
     }
 
     static async GetCategories() : Promise<ICategoryData[]> {
-        return await db('products_categories').select('*');
+        return await db('categories').select('*');
     }
 }
 

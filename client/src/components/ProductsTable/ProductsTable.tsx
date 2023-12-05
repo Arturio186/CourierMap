@@ -34,13 +34,17 @@ const ProductsTable : React.FC = () => {
 
     useEffect(()=> {
         (async () => {
+        
             const response = await GetCategories();
 
             if (response.status === 200) {
-                setCurrentCategoryID(response.message.categories[0].id)
-                setCategories(response.message.categories)
-            }
+                const categories = response.message.categories;
 
+                if (categories.length > 0) {
+                    setCurrentCategoryID(categories[0].id)
+                    setCategories(response.message.categories)
+                }
+            }
             setCategoriesLoading(false);
         })();
       }, []);
@@ -111,37 +115,38 @@ const ProductsTable : React.FC = () => {
                     setVisible={setModalEditProduct}
                 />
             </Modal>
+            
+            <Button onClick={() => setModalAddProduct(true)}>Добавить продукт</Button>
 
             <ProductsNavbar 
                 categories={categories} 
                 currentCategoryID={currentCategoryID} 
                 setCurrentCategoryID={setCurrentCategoryID}
             />
-            <Button onClick={() => setModalAddProduct(true)}>Добавить продукт</Button>
             {products.length == 0 ? 
                 <p>Нет данных</p>
                 :
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Название</th>
-                            <th>Цена</th>
-                            <th>Действие</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div className={classes.table}>
+                    <div className={classes.table__head}>
+                        <div className={classes.table__row}>
+                            <p>Название</p>
+                            <p>Цена</p>
+                            <p>Действие</p>
+                        </div>
+                    </div>
+                    <div className={classes.table__body}>
                         {products.map((product) => {
-                            return <tr key={product.id}>
-                                <td>{product.name}</td>
-                                <td>{product.price}</td>
-                                <td className={classes.actions}>
+                            return <div className={classes.table__row} key={product.id}>
+                                <p>{product.name}</p>
+                                <p>{product.price}</p>
+                                <p className={classes.actions}>
                                     <button onClick={() => ChangeProduct(product.id)}>Изменить</button>
                                     <button onClick={() => DeleteProduct(product.id)}>Удалить</button>
-                                </td>
-                            </tr>
+                                </p>
+                            </div>
                         })}
-                    </tbody>
-                </table>
+                    </div>
+                </div>
             }
             {notification &&
                 ReactDOM.createPortal(notification, document.body)}

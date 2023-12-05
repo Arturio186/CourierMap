@@ -47,7 +47,6 @@ const EditCategoryForm : React.FC<IEditCategoryFormProps> = ({targetCategory, ca
             <>
                 <h2 className={classes.title}>Изменение категории</h2>
                 <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-                    <label htmlFor="name">Название</label>
                     <Input
                         id="name"  
                         placeholder="Название"
