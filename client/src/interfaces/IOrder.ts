@@ -1,9 +1,19 @@
-export default interface IOrder {
-    num: number;
+interface IOrderProduct {
+    name: string;
     price: number;
-    products: Array<string>;
+    quantity: number;
+}
+
+export default interface IOrder {
+    id: number;
     address: string;
+    client_name: string;
+    client_phone: string;
+    note: string;
     courier_id: number | null;
-    x: number;
-    y: number;
+    map_x: number;
+    map_y: number;
+    products: Array<IOrderProduct>;
+    total_price: number;
+    status: number;
 }

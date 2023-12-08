@@ -1,8 +1,10 @@
-import React, {useEffect, useRef, useState, useContext} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { YMaps, Map, Placemark, Button, Clusterer, SearchControl  } from '@pbe/react-yandex-maps';
 
 import './CourierMap.scss';
+
+import { GetOrders } from 'http/OrdersAPI';
 
 import ICourier from 'interfaces/ICourier';
 import IOrder from 'interfaces/IOrder';
@@ -16,14 +18,22 @@ const CourierMap : React.FC = observer(() => {
         {id: 3, name: 'Матвей', surname: 'Мотикович', x: 57.1497, y: 65.5408}
     ]);
 
-    const [orders, setOrders] = useState<Array<IOrder>>([
-        {price: 5320, num: 1, products: ['Яблоко', 'Банан', 'Грушка'], address: 'г.Тюмень, ул. Ленина, д.25', courier_id: 1, x: 57.1453, y: 65.5552},
-        {price: 5320, num: 2, products: ['Яблоко', 'Грушка', 'Грушка'], address: 'г.Тюмень, ул. Киевская, д.1', courier_id: 1, x: 57.1443, y: 65.5342},
-        {price: 5320, num: 3, products: ['Грушка', 'Банан', 'Грушка'], address: 'г.Тюмень, ул. Харьковская, д.20', courier_id: 2, x: 57.1463, y: 65.5562},
-        {price: 5320, num: 4, products: ['Яблоко', 'Банан', 'Яблоко'], address: 'г.Тюмень, ул. Вьюжная, д.21', courier_id: null, x: 57.1473, y: 65.5532},
-        {price: 5320, num: 5, products: ['Банан', 'Банан', 'Банан'], address: 'г.Тюмень, ул. Володарского, д.22', courier_id: 3, x: 57.1453, y: 65.5352},
-        {price: 5320, num: 6, products: ['Яблоко', 'Яблоко', 'Яблоко'], address: 'г.Тюмень, ул. Республики, д.24', courier_id: 3, x: 57.1453, y: 65.5572}
-    ])
+    const [orders, setOrders] = useState<Array<IOrder>>([])
+
+    const [ordersLoading, setOrdersLoading] = useState<boolean>(true);
+
+    useEffect(()=> {
+        (async () => {
+            const response = await GetOrders();
+
+            if (response.status === 200) {
+                setOrders(response.message.orders)
+            }
+
+            setOrdersLoading(false);
+        })();
+    }, []);
+
 
     const [targetCourier, setTargetCourier] = useState<ICourier | null>(null);
     const [targetOrder, setTargetOrder] = useState<IOrder>({} as IOrder);
@@ -84,9 +94,9 @@ const CourierMap : React.FC = observer(() => {
 
     const openOrderModal = (event: React.MouseEvent<HTMLElement>, id : number) => {
         orders.forEach((order) => {
-            if (order.num === id) {
+            if (order.id === id) {
                 setTargetOrder(order);
-                setFocusOnCoord(order.x, order.y);
+                setFocusOnCoord(order.map_x, order.map_y);
             }
         })
 
@@ -95,10 +105,10 @@ const CourierMap : React.FC = observer(() => {
     
     const proccesMapClick = (event: React.MouseEvent<HTMLElement>, id : number) => {
         orders.forEach((order) => {
-            if (order.num === id) {
+            if (order.id === id) {
                 setTargetOrder(order);
-                setFocusOnCoord(order.x, order.y);
-                openOrderModal(event, order.num)
+                setFocusOnCoord(order.map_x, order.map_y);
+                openOrderModal(event, order.id)
             }
         })
     }
@@ -139,7 +149,7 @@ const CourierMap : React.FC = observer(() => {
         />)
     }
 
-    return (
+    return ( 
         <div className="inner-content">
             {creatorPlacemarkRef.current && <Modal visible={modalCreateOrder} setVisible={setModalCreateOrder}>
                 Здесь форма создания заказа
@@ -147,9 +157,9 @@ const CourierMap : React.FC = observer(() => {
                 <p>{creatorPlacemarkRef.current.geometry._coordinates[1]}</p>
             </Modal>}
             <Modal visible={modalOrder} setVisible={setModalOrder}>
-                <p> Номер заказа: {targetOrder.num}</p>
+                <p> Номер заказа: {targetOrder.id}</p>
                 <p> Cодержимое: {targetOrder.products?.map((product) => {
-                    return <p>{product}</p>
+                    return <p>{product.name}</p>
                 })}</p>
                 <p> Адрес: {targetOrder.address}</p>
             </Modal>
@@ -177,16 +187,16 @@ const CourierMap : React.FC = observer(() => {
                             if (targetCourier === null || targetCourier.id === order.courier_id) {
                                 return <div 
                                     className="order" 
-                                    key={order.num} 
-                                    onClick={(e) => openOrderModal(e, order.num)}
+                                    key={order.id} 
+                                    onClick={(e) => openOrderModal(e, order.id)}
                                 >
                                 <div className="card">
-                                    <p className="num">Заказ №{order.num}</p>
+                                    <p className="num">Заказ №{order.id}</p>
                                     <div className="columns">
                                         <div className="left-column">
-                                            <p>Клиент: Артём</p>
-                                            <p>+79124199313</p>
-                                            <p>Стоимость: <b>{order.price}</b> руб.</p>
+                                            <p>Клиент: {order.client_name}</p>
+                                            <p>{order.client_phone}</p>
+                                            <p>Стоимость: <b>{order.total_price}</b> руб.</p>
                                         </div>
                                         <div className="right-column">
                                             <h3>Адрес доставки</h3>
@@ -249,20 +259,20 @@ const CourierMap : React.FC = observer(() => {
                                 orders.map((order) => {
                                     if (targetCourier === null || targetCourier.id === order.courier_id) {
                                         return <Placemark
-                                            key={order.num}
+                                            key={order.id}
                                             geometry={{
                                                 type: 'Point',
-                                                coordinates: [order.x, order.y]
+                                                coordinates: [order.map_x, order.map_y]
                                             }}
                                             options={{
                                                 preset: 'islands#dotIcon',
-                                                iconColor:  order.courier_id !== null ? order.num === targetOrder.num ? 'blue' : 'green' : 'red',
+                                                iconColor:  order.courier_id !== null ? order.id === targetOrder.id ? 'blue' : 'green' : 'red',
                                             }} 
                                             properties={{
-                                                hintContent: `Заказ ${order.num}`,
+                                                hintContent: `Заказ ${order.id}`,
                                             }}
                                             onClick={
-                                                (event : React.MouseEvent<HTMLElement>) => proccesMapClick(event, order.num)
+                                                (event : React.MouseEvent<HTMLElement>) => proccesMapClick(event, order.id)
                                             }
                                         />
                                     }

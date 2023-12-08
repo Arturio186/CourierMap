@@ -36,9 +36,9 @@ class Order {
                     json_build_object(
                         'name', products.name,
                         'price', products.price,
-                        'quantity', products_lists.quantity
-                    )
-                    ) as products
+                        'quantity', products_lists.quantity)
+                    ) as products,
+                    sum(products.price * products_lists.quantity) as total_price
                 `))
             .join('products_lists', 'orders.id', '=', 'products_lists.order_id')
             .join('products', 'products_lists.product_id', '=', 'products.id')
