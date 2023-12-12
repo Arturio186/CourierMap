@@ -6,6 +6,12 @@ export const GetCategories = async () => {
     return data;
 }
 
+export const GetCategoriesWithProducts = async () => {
+    const {data} = await authHost.get('categories/categoriesandproducts');
+
+    return data;
+}
+
 export const DeleteCategoryByID = async (id : number) => {
     const {data} = await authHost.delete(`categories/delete/${id}`);
     

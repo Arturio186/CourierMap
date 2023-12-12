@@ -5,48 +5,30 @@ import classes from './AddOrderForm.module.scss';
 
 import normalizeCoords from 'utils/normalizeCoords';
 
+import { GetCategoriesWithProducts } from 'http/CategoriesAPI';
+
+import IAddOrderFormProps from 'interfaces/props/IAddOrderFormProps';
+import IAddOrderField from 'interfaces/IAddOrderField';
+import IResponseCategoriesWithProducts from 'interfaces/IResponseCategoriesWithProducts';
+
 import Input from 'components/UI/Input/Input';
 import Button from 'components/UI/Button/Button';
 
-import ICourier from 'interfaces/ICourier';
-import IOrderProduct from 'interfaces/IOrderProduct';
-
-
-
-interface IAddOrderFormProps {
-    map_x: number;
-    map_y: number;
-    visible: boolean;
-    couriers: Array<ICourier>
-}
-
-interface IAddOrderProduct {
-    category_id: number;
-    product_id: number;
-    quantity: number;
-}
-
-interface IAddOrderField {
-    address: string;
-    note: string;
-    map_x: number;
-    map_y: number;
-    client_name: string;
-    client_phone: string;
-    courier_id: number | null;
-    products: Array<IAddOrderProduct>;
-}
 
 const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, couriers}) => {
-    const {control, register, handleSubmit, formState: { errors }, setValue} = useForm<IAddOrderField>({mode: "onChange"});
+    const {control, register, handleSubmit, formState: { errors }, setValue, getValues} = useForm<IAddOrderField>({mode: "onChange"});
 
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'products',
     });
 
-    const [loading, setLoading] = useState(false);
+    const [geoCodeLoading, setGeoCodeLoading] = useState(false);
+    const [categoriesLoading, setCategoriesLoading] = useState(true);
+
     const [address, setAddress] = useState<string>('');
+    const [categoriesWithProducts, setCategoriesWithProducts] = useState<Array<IResponseCategoriesWithProducts>>([])
+    const [selectedCategories, setSelectedCategories] = useState<Array<number>>([]);
 
     const normalizedCoords = normalizeCoords([map_x, map_y]);
 
@@ -54,28 +36,34 @@ const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, cou
         console.log(data);
     }
 
-    const getAddressByCoords = async (x: number, y: number) =>  {
-        setLoading(true)
+    useEffect(()=> {
+        (async () => {
+            const response = await GetCategoriesWithProducts();
 
-        const response = await fetch(
-            `https://geocode-maps.yandex.ru/1.x/?apikey=0b375996-25a4-4d5d-9152-504fa8810cd2&geocode=${y},${x}&format=json`);
+            if (response.status === 200) {
+                setCategoriesWithProducts(response.message.categories)
+            }
 
-        if (response.status === 200) {
-            const result = await response.json();
-        
-            setAddress(result.response.GeoObjectCollection.featureMember[0].GeoObject.name);
-        }
-
-        setLoading(false)
-    }
-
-    const addProduct = () => {
-
-    }
+            setCategoriesLoading(false);
+        })();
+    }, []);
+    
 
     useEffect(() => {
         if (visible) {
-            getAddressByCoords(map_x, map_y).then();
+            (async () => {
+                setGeoCodeLoading(true)
+
+                const response = await fetch(
+                    `https://geocode-maps.yandex.ru/1.x/?apikey=0b375996-25a4-4d5d-9152-504fa8810cd2&geocode=${map_y},${map_x}&format=json`);
+
+                if (response.status === 200) {
+                    const result = await response.json();
+                    setAddress(result.response.GeoObjectCollection.featureMember[0].GeoObject.name);
+                }
+                
+                setGeoCodeLoading(false)
+            })();
         }
     }, [visible]);
 
@@ -83,10 +71,27 @@ const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, cou
         setValue('map_x', normalizedCoords[0])
         setValue('map_y', normalizedCoords[1])
         setValue('address', address)
-    }, [address])
+    }, [address]);
+
+    useEffect(() => {
+        const result : Array<number> = [];
+
+        fields.forEach((field) => {
+          result.push(Number(field.category_id));
+        });
+
+        setSelectedCategories(result);
+    }, [fields]);
+
+    const changeCategory = (index: number, category: number) => {
+        const newSelectedCategories = [...selectedCategories];
+        newSelectedCategories[index] = category;
+
+        setSelectedCategories(newSelectedCategories);
+    }
 
     return <div className={classes.container}>
-        {loading ? <p>Загрузка...</p> 
+        {geoCodeLoading || categoriesLoading ? <p>Загрузка...</p> 
         :
         <div className={classes.formContainer}>
             <h2>Создание заказа</h2>
@@ -187,14 +192,33 @@ const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, cou
                             {fields.map((product, index) => (
                                 <div key={product.id}>
                                     <div className={classes.simpleInputs}>
-                                        <select {...register(`products.${index}.category_id`)}>
-                                            <option value="1">Test</option>
-                                            <option value="2">Test</option>
+                                        <select 
+                                            {...register(`products.${index}.category_id`)}
+                                            onChange={(e) => changeCategory(index, Number(e.target.value))} 
+                                        >
+                                            <option value="-1" selected={true}>Не выбрано</option>
+                                            {categoriesWithProducts.map((category) => 
+                                                <option 
+                                                    value={category.category_id}
+                                                >
+                                                    {category.name}
+                                                </option>
+                                            )}
                                         </select>
                                         <select {...register(`products.${index}.product_id`)}>
-                                            <option value="1">Test</option>
-                                            <option value="2">Test</option>
+                                            <option value="-1">Не выбрано</option>
+                                            {categoriesWithProducts.map((category) => {
+                                                if (category.category_id === selectedCategories[index]) {
+                                                return category.products.map((product) => (
+                                                    <option key={product.id} value={product.id}>
+                                                        {product.name}
+                                                    </option>
+                                                ));
+                                                }
+                                                return null; 
+                                            })}
                                         </select>
+
                                         <input className={classes.quantity}
                                             type="number"
                                             {...register(`products.${index}.quantity`)}
