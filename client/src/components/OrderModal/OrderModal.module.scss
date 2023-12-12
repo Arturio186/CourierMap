@@ -1,0 +1,55 @@
+.card {
+    min-width: 400px;
+
+    p, h2, h3, ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    .title {
+        margin-bottom: 10px;
+
+        text-align: center;
+
+        font-weight: 600;
+    }
+    
+    .products {
+        font-weight: 500;
+    }
+
+    ul {
+        li {
+            list-style-type:circle;
+            margin-left: 35px;
+        }
+    }
+
+    .client {
+        font-weight: 600;
+    }
+
+
+    .price {
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    .address {
+        margin: 10px 0;
+        font-weight: 500;
+    }
+
+    .controls {
+        width: 100%;
+       
+        text-align: center;
+
+        margin-top: 20px;
+
+        button {
+            width: 25%;
+            margin-left: 10px;
+        }
+    }
+}

@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Register.scss';
 
-import RegisterForm from 'components/RegisterForm/RegisterForm';
+import RegisterForm from 'components/Forms/RegisterForm/RegisterForm';
 import AuthCollage from 'components/AuthCollage/AuthCollage';
 
 const Register : React.FC = () => {

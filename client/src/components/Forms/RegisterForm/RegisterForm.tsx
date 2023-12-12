@@ -9,10 +9,10 @@ import IRegisterField from 'interfaces/IRegisterField';
 
 import { LOGIN_ROUTE } from 'utils/consts';
 import { Registration } from 'http/CreditionalsAPI';
-import { Context } from '../..';
+import { Context } from '../../..';
 
-import AuthInput from '../UI/AuthInput/AuthInput';
-import AuthButton from '../UI/AuthButton/AuthButton';
+import AuthInput from '../../UI/AuthInput/AuthInput';
+import AuthButton from '../../UI/AuthButton/AuthButton';
 
 const RegisterForm : React.FC = observer(() => {
     const {register, handleSubmit, formState: { errors }} = useForm<IRegisterField>({mode: "onChange"})

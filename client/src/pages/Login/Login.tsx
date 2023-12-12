@@ -3,7 +3,7 @@ import React from 'react';
 import './Login.scss';
 
 import AuthCollage from 'components/AuthCollage/AuthCollage';
-import LoginForm from 'components/LoginForm/LoginForm';
+import LoginForm from 'components/Forms/LoginForm/LoginForm';
 
 const Login : React.FC = () => {
     document.title = "Авторизация";

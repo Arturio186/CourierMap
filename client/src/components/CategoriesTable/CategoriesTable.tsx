@@ -7,8 +7,8 @@ import { GetCategories, DeleteCategoryByID } from 'http/CategoriesAPI';
 
 import ICategory from 'interfaces/ICategory';
 
-import AddCategoryForm from 'components/AddCategoryForm/AddCategoryForm';
-import EditCategoryForm from 'components/EditCategoryForm/EditCategoryForm';
+import AddCategoryForm from 'components/Forms/AddCategoryForm/AddCategoryForm';
+import EditCategoryForm from 'components/Forms/EditCategoryForm/EditCategoryForm';
 
 import Modal from 'components/UI/Modal/Modal';
 import Notification from 'components/UI/Notification/Notification';

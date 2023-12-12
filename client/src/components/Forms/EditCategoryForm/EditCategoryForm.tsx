@@ -8,8 +8,8 @@ import { EditCategoryByID } from 'http/CategoriesAPI';
 import IEditCategoryFormProps from 'interfaces/props/IEditCategoryFormProps';
 import IEditCategoryField from 'interfaces/IEditCategoryField';
 
-import Button from '../UI/Button/Button';
-import Input from '../UI/Input/Input';
+import Button from '../../UI/Button/Button';
+import Input from '../../UI/Input/Input';
 
 
 const EditCategoryForm : React.FC<IEditCategoryFormProps> = ({targetCategory, categories, setCategories, showNotification, setVisible}) => {

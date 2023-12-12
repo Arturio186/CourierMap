@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "utils/consts"
-import { MAP_ROUTE } from "utils/consts"
+import { MAP_ROUTE, CATEGORIES_ROUTE, PRODUCTS_ROUTE } from "utils/consts"
 
 import IRoute from "interfaces/IRoute";
 
@@ -23,8 +23,8 @@ export const publicRoutes : Array<IRoute> = [
 export const privateRoutes : Array<IRoute> = [
     {path: '/', element: <MainLayout />, title: 'Шаблон', children: [
         {path: MAP_ROUTE, element: <CourierMap/>, title: "Карта курьеров"},
-        {path: '/products', element: <Products/>, title: "Товары"},
-        {path: '/categories', element: <Categories/>, title: "Категории"},
+        {path: PRODUCTS_ROUTE, element: <Products/>, title: "Товары"},
+        {path: CATEGORIES_ROUTE, element: <Categories/>, title: "Категории"},
     ]},
     {path: '*', element: <Navigate to={MAP_ROUTE}/>, title: "Переадресация"}
 ]

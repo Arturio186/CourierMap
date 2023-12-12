@@ -8,8 +8,8 @@ import { AddProduct } from 'http/ProductsAPI';
 import IAddProductFormProps from 'interfaces/props/IAddProductFormProps';
 import IAddProductField from 'interfaces/IAddProductField';
 
-import Input from '../UI/Input/Input';
-import Button from '../UI/Button/Button';
+import Input from '../../UI/Input/Input';
+import Button from '../../UI/Button/Button';
 
 const AddProductForm : React.FC<IAddProductFormProps> = ({category, products, setProducts, showNotification, setVisible}) => {
     const {register, handleSubmit, formState: { errors }} = useForm<IAddProductField>({mode: "onChange"});

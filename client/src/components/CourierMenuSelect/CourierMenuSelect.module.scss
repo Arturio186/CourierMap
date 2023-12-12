@@ -1,0 +1,45 @@
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 5px;
+
+    h3, p {
+        margin: 0;
+    }
+
+    p {
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .menu {
+        width: 50%;
+    
+        select {
+            padding: 10px 0px;
+            padding-left: 12px;
+            width: 100%;
+            appearance: none;
+            -webkit-appearance: none; 
+            -moz-appearance: none; 
+            -ms-appearance: none; 
+            text-overflow: '';
+            background: url('./triangle.svg') no-repeat calc(100% - 12px) center !important; 
+            
+            background-color: white !important;
+            
+            border-radius: 5px;
+            border: 1px solid rgba(34, 34, 34, 0.50);
+        }
+        
+    
+        select:focus {
+            outline: none;
+            border-radius: 5px;
+            border: 1px solid rgba(34, 34, 34, 0.50);
+        }
+    }        
+}

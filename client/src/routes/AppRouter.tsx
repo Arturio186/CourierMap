@@ -18,11 +18,7 @@ const AppRouter : React.FC = observer(() => {
                 const response = await Authentication();
 
                 if (response.status == 200) {
-                    user.setUser(response.message);
                     user.setIsAuth(true);
-                }
-                else {
-                    console.log(response.message)
                 }
             }
 

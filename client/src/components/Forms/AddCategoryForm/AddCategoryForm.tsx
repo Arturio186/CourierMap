@@ -8,8 +8,8 @@ import IAddCategoryFormProps from 'interfaces/props/IAddCategoryFormProps';
 
 import { AddCategory } from 'http/CategoriesAPI';
 
-import Input from '../UI/Input/Input';
-import Button from '../UI/Button/Button';
+import Input from '../../UI/Input/Input';
+import Button from '../../UI/Button/Button';
 
 const AddCategoryForm : React.FC<IAddCategoryFormProps> = ({categories, setCategories, showNotification, setVisible}) => {
     const {register, handleSubmit, formState: { errors }} = useForm<IAddCategoryField>({mode: "onChange"});

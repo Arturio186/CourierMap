@@ -8,8 +8,8 @@ import { EditProductByID } from 'http/ProductsAPI';
 import IEditProductField from 'interfaces/IEditProductField';
 import IEditProductFormProps from 'interfaces/props/IEditProductFormProps';
 
-import Button from '../UI/Button/Button';
-import Input from '../UI/Input/Input';
+import Button from '../../UI/Button/Button';
+import Input from '../../UI/Input/Input';
 
 const EditProductForm : React.FC<IEditProductFormProps> = ({targetProduct, products, setProducts, showNotification, setVisible}) => {
     const {register, handleSubmit, formState: { errors }, setValue} = useForm<IEditProductField>({mode: "onChange"});

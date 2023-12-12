@@ -10,6 +10,10 @@ import ICourier from 'interfaces/ICourier';
 import IOrder from 'interfaces/IOrder';
 
 import Modal from 'components/UI/Modal/Modal';
+import OrderModal from 'components/OrderModal/OrderModal';
+import CourierMenuSelect from 'components/CourierMenuSelect/CourierMenuSelect';
+import Orders from 'components/Orders/Orders';
+import MapAnnotation from 'components/MapAnnotation/MapAnnotation';
 
 const CourierMap : React.FC = observer(() => {
     const [couriers, setCouriers] = useState<Array<ICourier>>([
@@ -78,21 +82,7 @@ const CourierMap : React.FC = observer(() => {
         }
     }
 
-    const setFocusOnCourier = (id : string) => {
-        if (Number(id) === -1) {
-            setTargetCourier(null);
-            return;
-        }
-
-        couriers.forEach((courier) => {
-            if (courier.id === Number(id)) {
-                setTargetCourier(courier);
-                setFocusOnCoord(courier.x, courier.y);
-            }
-        })
-    }
-
-    const openOrderModal = (event: React.MouseEvent<HTMLElement>, id : number) => {
+    const openOrderModal = (id : number) => {
         orders.forEach((order) => {
             if (order.id === id) {
                 setTargetOrder(order);
@@ -103,12 +93,12 @@ const CourierMap : React.FC = observer(() => {
         setModalOrder(true);
     } 
     
-    const proccesMapClick = (event: React.MouseEvent<HTMLElement>, id : number) => {
+    const proccesMapClick = (id : number) => {
         orders.forEach((order) => {
             if (order.id === id) {
                 setTargetOrder(order);
                 setFocusOnCoord(order.map_x, order.map_y);
-                openOrderModal(event, order.id)
+                openOrderModal(order.id)
             }
         })
     }
@@ -156,59 +146,24 @@ const CourierMap : React.FC = observer(() => {
                 <p>{creatorPlacemarkRef.current.geometry._coordinates[0]}</p>
                 <p>{creatorPlacemarkRef.current.geometry._coordinates[1]}</p>
             </Modal>}
+
             <Modal visible={modalOrder} setVisible={setModalOrder}>
-                <p> Номер заказа: {targetOrder.id}</p>
-                <p> Cодержимое: {targetOrder.products?.map((product) => {
-                    return <p>{product.name}</p>
-                })}</p>
-                <p> Адрес: {targetOrder.address}</p>
+                <OrderModal order={targetOrder} />
             </Modal>
+
             <div className="window">
                 <div className="menu">
-                    <div className="menu__row">
-                        <div>
-                            <h3>Заказы</h3>
-                            {targetCourier && <p>Курьер: {targetCourier.name} {targetCourier.surname}</p>}
-                        </div>
-                        
-                        <form className="couriers-menu">
-                            <select name="courier" id="courier" onChange={(e) => setFocusOnCourier(e.target.value)}>
-                                <option value="-1">Все курьеры</option>
-                                {couriers.map((courier) => { 
-                                    return <option key={courier.id} value={courier.id}>
-                                        {`${courier.name} ${courier.surname}`}
-                                    </option>
-                                    })}
-                            </select>
-                        </form>
-                    </div>
-                    <div className="orders">
-                        {orders.map((order) => {
-                            if (targetCourier === null || targetCourier.id === order.courier_id) {
-                                return <div 
-                                    className="order" 
-                                    key={order.id} 
-                                    onClick={(e) => openOrderModal(e, order.id)}
-                                >
-                                <div className="card">
-                                    <p className="num">Заказ №{order.id}</p>
-                                    <div className="columns">
-                                        <div className="left-column">
-                                            <p>Клиент: {order.client_name}</p>
-                                            <p>{order.client_phone}</p>
-                                            <p>Стоимость: <b>{order.total_price}</b> руб.</p>
-                                        </div>
-                                        <div className="right-column">
-                                            <h3>Адрес доставки</h3>
-                                            <p>Адрес: {order.address}</p>
-                                        </div> 
-                                    </div>
-                                    <p className="status">Статус: <b>{order.courier_id == null ? 'Свободный' : 'Доставляется'}</b></p>
-                                </div>
-                            </div>
-                            }
-                        })}
-                    </div>
+                    <CourierMenuSelect
+                        targetCourier={targetCourier}
+                        setTargetCourier={setTargetCourier}
+                        setFocusOnCoord={setFocusOnCoord}
+                        couriers={couriers}
+                     />
+                    <Orders 
+                        orders={orders}
+                        targetCourier={targetCourier}
+                        openOrderModal={openOrderModal}
+                    />
                 </div>
                 <div className="map">
                     <YMaps query={{
@@ -271,9 +226,7 @@ const CourierMap : React.FC = observer(() => {
                                             properties={{
                                                 hintContent: `Заказ ${order.id}`,
                                             }}
-                                            onClick={
-                                                (event : React.MouseEvent<HTMLElement>) => proccesMapClick(event, order.id)
-                                            }
+                                            onClick={() => proccesMapClick(order.id)}
                                         />
                                     }
                                 })
@@ -287,11 +240,7 @@ const CourierMap : React.FC = observer(() => {
                             {creatorPlacemark}
                         </Map>
                     </YMaps>
-                    <p className="annotation">
-                        <img src="./images/Red.svg" /> - свободный&nbsp;
-                        <img src="./images/Green.svg" /> - доставляется&nbsp; 
-                        <img src="./images/Blue.svg" /> - выбранный 
-                    </p>
+                    <MapAnnotation />
                 </div>
             </div>
         </div>

@@ -10,8 +10,8 @@ import { GetProductsByCategoryID, DeleteProductByID } from 'http/ProductsAPI';
 import { GetCategories } from 'http/CategoriesAPI';
 
 import ProductsNavbar from 'components/ProductsNavbar/ProductsNavbar';
-import AddProductForm from 'components/AddProductForm/AddProductForm';
-import EditProductForm from 'components/EditProductForm/EditProductForm';
+import AddProductForm from 'components/Forms/AddProductForm/AddProductForm';
+import EditProductForm from 'components/Forms/EditProductForm/EditProductForm';
 
 import Notification from '../UI/Notification/Notification';
 import Button from '../UI/Button/Button';
