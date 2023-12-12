@@ -14,6 +14,7 @@ import OrderModal from 'components/OrderModal/OrderModal';
 import CourierMenuSelect from 'components/CourierMenuSelect/CourierMenuSelect';
 import Orders from 'components/Orders/Orders';
 import MapAnnotation from 'components/MapAnnotation/MapAnnotation';
+import AddOrderForm from 'components/Forms/AddOrderForm/AddOrderForm';
 
 const CourierMap : React.FC = observer(() => {
     const [couriers, setCouriers] = useState<Array<ICourier>>([
@@ -130,7 +131,7 @@ const CourierMap : React.FC = observer(() => {
             }}
             options={{
                 preset: 'islands#dotIcon',
-                iconColor: 'red',
+                iconColor: 'black',
                 draggable: true
             }} 
             properties={{
@@ -142,9 +143,12 @@ const CourierMap : React.FC = observer(() => {
     return ( 
         <div className="inner-content">
             {creatorPlacemarkRef.current && <Modal visible={modalCreateOrder} setVisible={setModalCreateOrder}>
-                Здесь форма создания заказа
-                <p>{creatorPlacemarkRef.current.geometry._coordinates[0]}</p>
-                <p>{creatorPlacemarkRef.current.geometry._coordinates[1]}</p>
+                <AddOrderForm
+                    map_x={creatorPlacemarkRef.current.geometry._coordinates[0]}
+                    map_y={creatorPlacemarkRef.current.geometry._coordinates[1]}
+                    visible={modalCreateOrder}
+                    couriers={couriers}
+                />
             </Modal>}
 
             <Modal visible={modalOrder} setVisible={setModalOrder}>
