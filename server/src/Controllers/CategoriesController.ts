@@ -53,6 +53,17 @@ class CategoriesController {
             console.log(error)
         }
     }
+
+    static async GetCategoriesWithProducts(req: Request, res: Response, next: NextFunction) {
+        try {
+            const categories = await Category.GetCategoriesWithProducts();
+
+            res.json({status: 200, message: {categories: categories}});
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 export default CategoriesController;
