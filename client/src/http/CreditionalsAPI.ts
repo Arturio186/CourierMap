@@ -17,9 +17,9 @@ const ProccesResponse = (data : any) => {
     return result
 }
 
-export const Registration = async (email : string, password : string) => {
+export const Registration = async (name : string, surname : string, email : string, password : string) => {
     const {data} = await host.post('creditionals/registartion', {
-        email, password
+        name, surname, email, password, role: 0
     });
 
     return ProccesResponse(data);

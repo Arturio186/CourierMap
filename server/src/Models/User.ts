@@ -12,15 +12,15 @@ class User {
         return user;
     }
 
-    static async Create(email : string, password : string) : Promise<IUserData> {
+    static async Create(name: string, surname: string, email : string, password : string, role: number) : Promise<IUserData> {
         const [user] : IUserData[] = await db('users')
             .returning('*')
             .insert({ 
-                surname: 'ДОБАВЬ ПОЛЯ', 
-                name: 'ДОБАВЬ ПОЛЯ',
+                surname: surname, 
+                name: name,
                 email: email,
                 password: password,
-                role: Roles.Opeartor
+                role: role
             });
 
         return user;

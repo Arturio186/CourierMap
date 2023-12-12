@@ -20,7 +20,7 @@ const RegisterForm : React.FC = observer(() => {
     const {user} = useContext(Context);
 
     const onSubmit: SubmitHandler<IRegisterField> = async (data) => {
-        const response = await Registration(data.email, data.password);
+        const response = await Registration(data.name, data.surname, data.email, data.password);
         
         if (response.status == 200) {
             user.setUser(response.message);
@@ -34,6 +34,38 @@ const RegisterForm : React.FC = observer(() => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <h1 className={classes.title}>Регистрация</h1>
+            <div className={classes.inputContainer}>
+                <label 
+                    htmlFor="name" 
+                    className={`${errors.name ? `${classes.errorLabel}` : ''}`}>
+                        Имя
+                </label>
+                <AuthInput
+                    id="name"  
+                    placeholder="Имя"
+                    type="text"
+                    register={register('name', {
+                        required: 'Введите имя'
+                    })}
+                    error={errors.name}
+                />
+            </div>
+            <div className={classes.inputContainer}>
+                <label 
+                    htmlFor="surname" 
+                    className={`${errors.surname ? `${classes.errorLabel}` : ''}`}>
+                        Фамилия
+                </label>
+                <AuthInput
+                    id="surname"  
+                    placeholder="Фамилия"
+                    type="text"
+                    register={register('surname', {
+                        required: 'Введите фамилию'
+                    })}
+                    error={errors.surname}
+                />
+            </div>
             <div className={classes.inputContainer}>
                 <label 
                     htmlFor="email" 

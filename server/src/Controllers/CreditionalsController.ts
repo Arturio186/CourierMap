@@ -9,7 +9,7 @@ import IUserRequestData from "../Interfaces/IUserRequestData";
 class CreditionalsController {
     static async Registartion(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try {
-            const {email, password} = req.body;
+            const {name, surname, email, password, role} = req.body;
         
             const candidate = await User.GetUserByEmail(email);
 
@@ -20,7 +20,7 @@ class CreditionalsController {
 
             const hashPassword = await bcrypt.hash(password, 5);
 
-            const user = await User.Create(email, hashPassword);
+            const user = await User.Create(name, surname, email, hashPassword, role);
             
             const token = GenerateJWT(user.id, user.email, user.role);
             

@@ -15,8 +15,6 @@ class OrdersController {
             console.log(error)
         }
     }
-
-    
 }
 
 export default OrdersController;
