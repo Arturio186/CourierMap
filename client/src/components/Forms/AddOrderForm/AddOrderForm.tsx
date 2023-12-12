@@ -14,9 +14,10 @@ import IResponseCategoriesWithProducts from 'interfaces/IResponseCategoriesWithP
 import Input from 'components/UI/Input/Input';
 import Button from 'components/UI/Button/Button';
 
+import { AddOrder } from 'http/OrdersAPI';
 
 const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, couriers}) => {
-    const {control, register, handleSubmit, formState: { errors }, setValue, getValues} = useForm<IAddOrderField>({mode: "onChange"});
+    const {control, register, handleSubmit, formState: { errors }, setValue} = useForm<IAddOrderField>({mode: "onChange"});
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -33,7 +34,9 @@ const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, cou
     const normalizedCoords = normalizeCoords([map_x, map_y]);
 
     const onSubmit: SubmitHandler<IAddOrderField> = async (data) => {
-        console.log(data);
+        const response = await AddOrder(data);
+
+        // Дописать !!!
     }
 
     useEffect(()=> {
