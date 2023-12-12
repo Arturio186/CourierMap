@@ -1,8 +1,4 @@
-interface IOrderProduct {
-    name: string;
-    price: number;
-    quantity: number;
-}
+import IOrderProduct from "./IOrderProduct";
 
 export default interface IOrder {
     id: number;

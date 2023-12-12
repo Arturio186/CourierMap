@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm, SubmitHandler} from 'react-hook-form';
+import { useForm, SubmitHandler, useFieldArray} from 'react-hook-form';
 
 import classes from './AddOrderForm.module.scss';
 
@@ -9,12 +9,21 @@ import Input from 'components/UI/Input/Input';
 import Button from 'components/UI/Button/Button';
 
 import ICourier from 'interfaces/ICourier';
+import IOrderProduct from 'interfaces/IOrderProduct';
+
+
 
 interface IAddOrderFormProps {
     map_x: number;
     map_y: number;
     visible: boolean;
     couriers: Array<ICourier>
+}
+
+interface IAddOrderProduct {
+    category_id: number;
+    product_id: number;
+    quantity: number;
 }
 
 interface IAddOrderField {
@@ -25,10 +34,16 @@ interface IAddOrderField {
     client_name: string;
     client_phone: string;
     courier_id: number | null;
+    products: Array<IAddOrderProduct>;
 }
 
 const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, couriers}) => {
-    const {register, handleSubmit, formState: { errors }, setValue} = useForm<IAddOrderField>({mode: "onChange"});
+    const {control, register, handleSubmit, formState: { errors }, setValue} = useForm<IAddOrderField>({mode: "onChange"});
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'products',
+    });
 
     const [loading, setLoading] = useState(false);
     const [address, setAddress] = useState<string>('');
@@ -52,6 +67,10 @@ const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, cou
         }
 
         setLoading(false)
+    }
+
+    const addProduct = () => {
+
     }
 
     useEffect(() => {
@@ -163,7 +182,34 @@ const AddOrderForm : React.FC<IAddOrderFormProps> = ({map_x, map_y, visible, cou
                         </div>
                     </div>
                     <div className={classes.right}>
-                        Здесь выбор продуктов
+                        <h3>Продукты</h3>
+                        <div className={classes.centered}>
+                            {fields.map((product, index) => (
+                                <div key={product.id}>
+                                    <div className={classes.simpleInputs}>
+                                        <select {...register(`products.${index}.category_id`)}>
+                                            <option value="1">Test</option>
+                                            <option value="2">Test</option>
+                                        </select>
+                                        <select {...register(`products.${index}.product_id`)}>
+                                            <option value="1">Test</option>
+                                            <option value="2">Test</option>
+                                        </select>
+                                        <input className={classes.quantity}
+                                            type="number"
+                                            {...register(`products.${index}.quantity`)}
+                                        />
+                                        <Button onClick={() => remove(index)}>X</Button>
+                                    </div>
+                                </div>
+                            ))}
+                            <Button 
+                                onClick={(e) => { e.preventDefault(); append({ category_id: -1, product_id: -1, quantity: 0 }) }}
+                                style={{margin: '0 auto'}}
+                            >
+                                Добавить
+                            </Button>
+                        </div>
                     </div>
                 </div>
                 <Button>Создать</Button>

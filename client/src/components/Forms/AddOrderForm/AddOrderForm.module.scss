@@ -16,6 +16,8 @@
             flex-direction: row;
             justify-content: space-between;
 
+            min-width: 700px;
+
             .left {
                 margin-right: 40px;
 
@@ -49,6 +51,60 @@
                     outline: none;
                     border-radius: 5px;
                     border: 1px solid rgba(34, 34, 34, 0.50);
+                }
+            }
+
+            .right {
+                width: 50%;
+
+                max-height: 50vh;
+                overflow: auto;
+               
+                .centered {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+
+                    .simpleInputs {
+                        width: 100%;
+
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+
+                        select {
+                            width: 40%;
+                            margin-right: 6px;
+                        }
+
+                        input {
+                            width: 10%;
+                        }
+
+                        button {
+                            width: 20px;
+                            height: 100%;
+    
+                            padding: 0;
+                            margin: 0;
+
+                            border-radius: 0px;
+                            
+                            margin-left: 3px;
+                        }
+
+                        margin-bottom: 5px;
+                    }
+                }
+
+                h3 {
+                    margin: 0;
+                    padding: 0;
+
+                    text-align: center;
+                    margin-bottom: 20px;
+                    font-weight: 600;
                 }
             }
         }
