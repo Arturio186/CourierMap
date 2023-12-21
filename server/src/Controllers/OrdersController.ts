@@ -1,25 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
 import Order from "../Models/Order";
+import APIError from "../Errors/APIError";
+import CheckObjectProperties from "../Utilities/CheckObjectProperties";
 
-interface IOrderRequest {
-    address: string;
-    note: string;
-    map_x: number;
-    map_y: number;
-    client_name: string;
-    client_phone: string;
-    courier_id: number | null;
-    products: Array<IOrderProductsRequest>;
-}
-
-interface IOrderProductsRequest {
-    category_id: number;
-    product_id: number;
-    quantity: number;
-}
-
-
+import IOrderRequest from "../Interfaces/IOrderRequest";
 
 class OrdersController {
     static async All(req: Request, res: Response, next: NextFunction) {
@@ -31,12 +16,21 @@ class OrdersController {
             res.json({status: 200, message: {orders: orders}});
         }
         catch (error) {
-            console.log(error)
+            next(error)
         }
     }
 
     static async Store(req: Request, res: Response, next: NextFunction) {
         try {
+            if (!req.body.order) {
+                return next(APIError.BadRequest('There is no order data'))
+            }
+
+            if (!CheckObjectProperties(req.body.order, 
+                ['address', 'client_name', 'client_phone', 'courier_id', 'map_x', 'map_y', 'note', 'products'])) {
+                    return next(APIError.BadRequest('Not all data in the req.body.order'))
+            }
+            
             const { address, client_name, client_phone, courier_id, map_x, map_y, note, products } = req.body.order;
             
             const requestOrder : IOrderRequest = { 
@@ -55,7 +49,7 @@ class OrdersController {
             res.json({status: 200, message: {created_order: responseOrder}});
         }
         catch (error) {
-            console.log(error)
+            next(error)
         }
     }
 }

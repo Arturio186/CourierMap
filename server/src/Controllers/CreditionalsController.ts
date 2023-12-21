@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from 'bcrypt';
-import GenerateJWT from "../Utilities/GenerateJWT";
+
+import APIError from "../Errors/APIError";
+
 import User from '../Models/User';
+
+import CheckObjectProperties from "../Utilities/CheckObjectProperties";
+import GenerateJWT from "../Utilities/GenerateJWT";
 
 import IAuthentication from "../Interfaces/IAuthentication";
 import IUserRequestData from "../Interfaces/IUserRequestData";
@@ -9,13 +14,15 @@ import IUserRequestData from "../Interfaces/IUserRequestData";
 class CreditionalsController {
     static async Registartion(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try {
+            if (!CheckObjectProperties(req.body, ['name', 'surname', 'email', 'password', 'role']))
+                return next(APIError.BadRequest('Not all data in the body'));
+
             const {name, surname, email, password, role} = req.body;
         
             const candidate = await User.GetUserByEmail(email);
 
             if (candidate) {
-                res.json({status: 403, message: 'Пользователь с таким email уже существует!'});
-                return;
+                return next(APIError.Forbidden('A user with this email already exists'));
             }
 
             const hashPassword = await bcrypt.hash(password, 5);
@@ -27,26 +34,28 @@ class CreditionalsController {
             res.json({status: 200, message: { token: token }});
         }
         catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 
     static async Authorization(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try {
+            if (!CheckObjectProperties(req.body, ['email', 'password'])) {
+                return next(APIError.BadRequest('Not all data in the body'))
+            }
+                
             const {email, password} = req.body;
 
             const user = await User.GetUserByEmail(email);
 
             if (!user) {
-                res.json({status: 404, message: 'Пользователь с таким email не найден!'});
-                return;
+                return next(APIError.NotFound('The user with this email was not found'));
             }
 
             const comparePassword = await bcrypt.compare(password, user.password);
 
             if (!comparePassword) {
-                res.json({status: 400, message: 'Неверный пароль!'});
-                return;
+                return next(APIError.NotFound('Wrong password'));
             }
 
             const token = GenerateJWT(user.id, user.email, user.role);
@@ -54,20 +63,28 @@ class CreditionalsController {
             res.json({status: 200, message: { token: token }});
         }
         catch (error) {
-            console.log(error);
+            next(error);
         } 
     }
     
     static async Authentication(req: IAuthentication, res: Response, next: NextFunction) : Promise<void> {
         try {
-            const user = req.user as IUserRequestData;
+            if (!req.user) {
+                return next(APIError.BadRequest('There is no user data'))
+            }
+
+            if (!CheckObjectProperties(req.user, ['id', 'email', 'role'])) {
+                return next(APIError.BadRequest('Not all data in the req.user'))
+            }
+
+            const user : IUserRequestData = req.user
         
             const token = GenerateJWT(user.id, user.email, user.role);
 
             res.json({status: 200, message: { token: token }});
         }
         catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 }

@@ -1,11 +1,11 @@
 import { Router } from "express";
 
+import AuthMiddleware from "../Middlewares/AuthMiddleware";
+
 import CreditionalsRouter from './CreditionalsRouter';
 import ProductsRouter from './ProductsRouter';
 import CategoriesRouter from './CategoriesRouter';
 import OrderRouter from './OrderRouter';
-
-import AuthMiddleware from "../Middlewares/AuthMiddleware";
 
 const router = Router();
 
